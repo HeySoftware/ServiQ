@@ -36,7 +36,7 @@ ob_start();
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     
-	<div class="brand">ServiQ Rafael</div>
+	<div class="brand">ServiQ</div>
     <div class="address-bar">UABC SAUZAL</div>
 	
 	<!-- Seccion principal? :O -->
