@@ -64,13 +64,13 @@
 											//Anairene.- Gestionar Admins
 											if($validarSudo==1)
 											{
-                    							echo "<a href=\"index.php?op=consulAdm\">Admins</a>";
+                    							echo "<a href=\"#\" onclick=\"request('consulAdm')\">Admins</a>";
 												// Moxis
-                    							echo "<a href=\"index.php?op=recarga\">Recarga</a>";
+                    							echo "<a href=\"#\" onclick=\"request('recarga')\">Recarga</a>";
                     							//Moxis
 											}
 											//Fin Anairene.- Gestionar Admins
-			                    			echo "<a href=\"index.php?op=vPed\">Pedidos</a>";
+			                    			echo "<a href=\"#\" onclick=\"request('vPed')\">Pedidos</a>";
 			                    		}
 										else
 										{
@@ -831,17 +831,7 @@
 	                    <?php
 	                    	if(isset($_SESSION["adm"]))
 	                    	{
-
-	                    		echo "<a class=\"btn btn-primary\" href=index.php?op=mPl&&id_pl=$id_pl role=\"button\">Modificar</a>";
-	                    		if($status == 1)
-	                    		{
-	                    			echo "<a class=\"btn btn-success\" href=index.php?op=desactivarPl&&id_pl=$id_pl role=\"button\">Activado</a>";
-	                    		}
-	                    		else
-	                    		{
-	                    			echo "<a class=\"btn btn-danger\" href=index.php?op=activarPl&&id_pl=$id_pl role=\"button\">Desactivado</a>";
-	                    		}
-	                    		
+	                    		$this->activarDesactivar($id_pl,$status);	
 	                    	}
 	                    	else
 	                    	{
@@ -1624,6 +1614,22 @@
 				echo " <button type=\"button\" class=\"btn btn-success disabled\"> + </button>";
 			}
 			?></p><?php
+		}
+
+		public function activarDesactivar($id_pl,$status)
+		{
+			$id_activar = "activar".$id_pl;
+    		echo "<div id=\"$id_activar\">";
+    		echo "<button class=\"btn btn-primary\" onclick=\"request('mPl&&id_pl=$id_pl')\">Modificar</button>";
+    		if($status == 1)
+    		{
+    			echo "<button class=\"btn btn-success\" onclick=\"activarDesactivar('desactivarPl&&id_pl=$id_pl','$id_activar')\">Activado</button>";
+    		}
+    		else
+    		{
+    			echo "<button class=\"btn btn-danger\" onclick=\"activarDesactivar('activarPl&&id_pl=$id_pl','$id_activar')\">Desactivado</button>";
+    		}
+    		echo "</div>";
 		}
 	}
 ?>

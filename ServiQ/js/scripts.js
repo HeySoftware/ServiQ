@@ -68,3 +68,16 @@ function eliminarCarrito(id_pl_cd)
 	xhttp.open("GET",url,true);
 	xhttp.send();
 }
+
+function activarDesactivar(op,id)
+{
+	var xhttp = new XMLHttpRequest();
+	var url = "operador.php?op=".concat(op);
+	xhttp.onreadystatechange = function(){
+        if(xhttp.readyState == 4 && xhttp.status == 200){
+            document.getElementById(id).innerHTML = xhttp.responseText;
+        }
+    };
+	xhttp.open("GET",url,true);
+	xhttp.send();
+}

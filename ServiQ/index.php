@@ -93,6 +93,7 @@ ob_start();
 					//Aqui se mandan las operaciones al adm.
 					//El funcionamiento del sistema se encuentra aqui.
 					//$objAdm->doGet($op); 
+					?><div id="todo"><?php $objAdm->doGet(""); ?></div><?php
 				}
 				else
 				{
@@ -104,7 +105,7 @@ ob_start();
 				}
 			//}	
 		?>
-	<div id="todo"></div>
+	
 	</div>
 	
 	

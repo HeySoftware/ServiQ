@@ -1277,20 +1277,19 @@
 				$id_cd = $_GET["id_cd"];
 				$set = "status = 0";
 				$condicion = "id_cd = $id_cd";
-				echo $condicion;
 				$this->myDao->updateData("cDia",$condicion,$set);
-				header("Location: index.php");
+				//header("Location: index.php");
 			}
 			elseif (isset($_GET["id_pl"])) 
 			{
 				$id_pl = $_GET["id_pl"];
 				$set = "status = 0";
 				$condicion = "id_pl = $id_pl";
-				echo $condicion;
 				$this->myDao->updateData("platillo",$condicion,$set);
 				$categoria = $this->myDao->consultaTabla("id_ct","platillo",$condicion);
 				$id_ct = $categoria[0]["id_ct"];
-				header("Location: index.php?op=vMenu&&id_ct=$id_ct");
+				$this->myGui->activarDesactivar($id_pl,0);
+				//header("Location: index.php?op=vMenu&&id_ct=$id_ct");
 			}
 		}
 		public function activarPl()
@@ -1300,20 +1299,19 @@
 				$id_cd = $_GET["id_cd"];
 				$set = "status = 1";
 				$condicion = "id_cd = $id_cd";
-				echo $condicion;
 				$this->myDao->updateData("cDia",$condicion,$set);
-				header("Location: index.php");
+				//header("Location: index.php");
 			}
 			elseif (isset($_GET["id_pl"])) 
 			{
 				$id_pl = $_GET["id_pl"];
 				$set = "status = 1";
 				$condicion = "id_pl = $id_pl";
-				echo $condicion;
 				$this->myDao->updateData("platillo",$condicion,$set);
 				$categoria = $this->myDao->consultaTabla("id_ct","platillo",$condicion);
 				$id_ct = $categoria[0]["id_ct"];
-				header("Location: index.php?op=vMenu&&id_ct=$id_ct");
+				$this->myGui->activarDesactivar($id_pl,1);
+				//header("Location: index.php?op=vMenu&&id_ct=$id_ct");
 			}
 		}
 		//Fin Baja de Platillos y Comida del Dia
