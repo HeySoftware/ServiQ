@@ -28,7 +28,7 @@
             	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 	<ul class="nav navbar-nav">                 	
                     	<li>
-                    		<a href="#" onclick="request('vPCliente')">Comida del Dia</a>
+                    		<a href="#" onclick="request('')">Comida del Dia</a>
                         	<!--<a href="index.php">Comida del dia</a>-->
                     	</li>
                     	<?php
@@ -46,7 +46,7 @@
 										{
 											$categoria = $categorias[$i]["id_ct"];
 											$nombre = $categorias[$i]["categoria"];
-											echo "<li><a href=\"index.php?op=vMenu&&id_ct=$categoria\">$nombre</a></li>";
+											echo "<li><a href=\"#\" onclick=\"request('vMenu&&id_ct=$categoria')\">$nombre</a></li>";
 										}
 									?>
 								</ul>
@@ -75,8 +75,8 @@
 										else
 										{
 			                    			?>
-			                    			<a href="index.php?op=vPCliente">Mis Pedidos</a>
-			                    			<a href="index.php?op=showFav">Mis Favoritos</a>
+			                    			<a href="#" onclick="request('vPCliente')">Mis Pedidos</a>
+			                    			<a href="#" onclick="request('showFav')">Mis Favoritos</a>
 			                    			<a href="index.php?op=vBEntrada">Correo <span class="badge badge-success"><?php echo $bandeja;?></span></a>
 			                    			<?php
 			                    		}
