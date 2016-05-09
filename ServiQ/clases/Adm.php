@@ -942,8 +942,7 @@
 					$this->myDao->updateData("carrito","id_car = $id_car","cantidad = $cantidad");
 				}
 			}
-			// Redirecciona al carrito.
-			header('Location: index.php?op=vCar');
+			$this->myGui->modificarCantidad($cantidad,$saldo,$precio,$id_car);
 		}
 
 		/*
@@ -987,8 +986,7 @@
 					$this->myDao->updateData("carrito","id_car = $id_car","cantidad = $cantidad");
 				}
 			}
-			// Redirecciona al carrito.
-			header('Location: index.php?op=vCar');
+			$this->myGui->modificarCantidad($cantidad,$saldo,$precio,$id_car);
 		}
 
 		/* 
@@ -1503,6 +1501,8 @@
 			//2.>>>>>>> Se agrega el saldo nuevo
 			$this->myDao->updateData("cliente", "id_cl=".$idUsuario, "saldo=".$saldoNuevo);
 			$this->myDao->deleteData("carrito", "id_car=".$idCarrito);
+
+			$this->verCarrito();
 		}
 
 		public function doGet($op)

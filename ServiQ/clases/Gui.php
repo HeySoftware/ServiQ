@@ -845,13 +845,30 @@
 	                    	}
 	                    	else
 	                    	{
-	                    		echo "<button class=\"btn btn-success\" onclick=\"request('aCar&&id_pl=$id_pl')\">Agregar a Carrito</button>";
+	                    		echo "<button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#aCar\" onclick=\"agregarCarrito('id_pl=$id_pl')\">Agregar a Carrito</button>";
 	                    	}
 	                    ?>
 	                </div> 
 			    </div>
 			    </div>
 			    </div>
+
+			    <div class="modal fade" id="aCar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Has Agregado al Carrito</h4>
+				      </div>
+				      <div class="modal-body">
+				        Puedes ver tu carrito en la pesta&ntilde;a Ver/Carrito.
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 				<?php
 				}
 			}
@@ -957,6 +974,7 @@
 					</div>
 				
 			</div>
+
 			<?php
 		}
 		//FIN MOXXIS,
@@ -1094,13 +1112,30 @@
 	                    	}
 	                    	else
 	                    	{
-	                    		echo "<a class=\"btn btn-success\" href=index.php?op=aCar&&id_cd=$id_cd role=\"button\">Agregar a Carrito</a>";
+	                    		echo "<button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#aCar\" onclick=\"agregarCarrito('id_cd=$id_cd')\">Agregar a Carrito</button>";
 	                    	}
 	                    ?>
 	                </div> 
 			    </div>
 			    </div>
 			    </div>
+
+			    <div class="modal fade" id="aCar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Has Agregado al Carrito</h4>
+				      </div>
+				      <div class="modal-body">
+				        Puedes ver tu carrito en la pesta&ntilde;a Ver/Carrito.
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 				<?php
 				}
 			}
@@ -1416,8 +1451,8 @@
 						?>
 					</h3>
 					<!-- Eliminar del Carrito -->
-					<?
-					echo "<a href=\"#\" onclick=\"request('eliminarCarrito&&id_car=$id_car')\" class=\"pull-right\" style=\"color:black\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>";
+					<?php
+					echo "<button type=\"button\" onclick=\"eliminarCarrito('id_car=$id_car')\" class=\"btn btn-secondary pull-right\" style=\"color:black\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>";
 					?>
 	    			<div class="clearfix"></div>
 
@@ -1473,25 +1508,9 @@
 								<label class="col-sm-2 control-label">Cantidad</label>
 
 								<div class="col-sm-4">
-									<p><?php
-									if($cantidad == 1)
-									{
-										echo "<a href=\"index.php?op=dCan&&id_car=$id_car\" class=\"btn btn-success disabled\">-</a> ";
-									}
-									else
-									{
-										echo "<a href=\"index.php?op=dCan&&id_car=$id_car\" class=\"btn btn-success\">-</a> ";
-									}
-									echo "$cantidad";
-									if($saldo >= $precio)
-									{
-									echo " <a href=\"index.php?op=aCan&&id_car=$id_car\" class=\"btn btn-success\">+</a>";
-									}
-									else
-									{
-										echo " <a href=\"index.php?op=aCan&&id_car=$id_car\" class=\"btn btn-success disabled\">+</a>";
-									}
-									?></p>
+								<?php
+									$this->modificarCantidad($cantidad,$saldo,$precio,$id_car);
+								?>
 								</div>
 							</div>
 					</div>
@@ -1582,5 +1601,29 @@
 		}
 		/// FIN GABY ///
 		
+
+		public function modificarCantidad($cantidad,$saldo,$precio,$id_car)
+		{ 
+			$id = "cantidad".$id_car;
+			echo "<p id=\"$id\">";
+			if($cantidad == 1)
+			{
+				echo "<button type=\"button\" class=\"btn btn-success disabled\"> - </button> ";
+			}
+			else
+			{
+				echo "<button type=\"button\" onclick=\"cantidad('dCan&&id_car=$id_car','$id_car')\" class=\"btn btn-success\"> - </button>";
+			}
+			echo " $cantidad ";
+			if($saldo >= $precio)
+			{
+			echo " <button type=\"button\" onclick=\"cantidad('aCan&&id_car=$id_car','$id_car')\" class=\"btn btn-success\"> + </button>";
+			}
+			else
+			{
+				echo " <button type=\"button\" class=\"btn btn-success disabled\"> + </button>";
+			}
+			?></p><?php
+		}
 	}
 ?>

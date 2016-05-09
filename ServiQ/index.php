@@ -57,6 +57,11 @@ ob_start();
 				$op = $_GET["op"];
 				$objAdm->doGet($op);
 			}
+			if(isset($_POST["op"]))
+			{
+				$op = $_POST["op"];
+				$objAdm->doGet($op);
+			}
 			//$op="";          
 			
 			//Se "Cacha el valor de la operacion"
@@ -91,8 +96,11 @@ ob_start();
 				}
 				else
 				{
-					//Si no hay una sesion existente, lo unico que se muestra es la forma de inicio de sesion.
-					$objAdm->logInForm();
+					if(!isset($op))
+					{
+						//Si no hay una sesion existente, lo unico que se muestra es la forma de inicio de sesion.
+						$objAdm->logInForm();
+					}
 				}
 			//}	
 		?>
