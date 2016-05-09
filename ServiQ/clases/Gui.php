@@ -831,7 +831,7 @@
 	                    <?php
 	                    	if(isset($_SESSION["adm"]))
 	                    	{
-	                    		$this->activarDesactivar($id_pl,$status);	
+	                    		$this->activarDesactivarPlatillo($id_pl,$status);	
 	                    	}
 	                    	else
 	                    	{
@@ -1089,16 +1089,7 @@
 	                    <?php
 	                    	if(isset($_SESSION["adm"]))
 	                    	{
-	                    		echo "<a class=\"btn btn-primary\" href=index.php?op=mPl&&id_cd=$id_cd role=\"button\">Modificar</a>";
-	                    		if($status== 1)
-	                    		{
-	                    			echo "<a class=\"btn btn-success\" href=index.php?op=desactivarPl&&id_cd=$id_cd role=\"button\">Activado</a>";
-	                    		}
-	                    		else
-	                    		{
-	                    			echo " <a class=\"btn btn-danger\" href=index.php?op=activarPl&&id_cd=$id_cd role=\"button\">Desactivado</a>";
-	                    		}
-	                    		
+	                    		$this->activarDesactivarCDia($id_cd,$status);	
 	                    	}
 	                    	else
 	                    	{
@@ -1616,7 +1607,7 @@
 			?></p><?php
 		}
 
-		public function activarDesactivar($id_pl,$status)
+		public function activarDesactivarPlatillo($id_pl,$status)
 		{
 			$id_activar = "activar".$id_pl;
     		echo "<div id=\"$id_activar\">";
@@ -1628,6 +1619,22 @@
     		else
     		{
     			echo "<button class=\"btn btn-danger\" onclick=\"activarDesactivar('activarPl&&id_pl=$id_pl','$id_activar')\">Desactivado</button>";
+    		}
+    		echo "</div>";
+		}
+
+		public function activarDesactivarCDia($id_cd,$status)
+		{
+			$id_activar = "activar".$id_cd;
+    		echo "<div id=\"$id_activar\">";
+    		echo "<button class=\"btn btn-primary\" onclick=\"request('mPl&&id_cd=$id_cd')\">Modificar</button>";
+    		if($status == 1)
+    		{
+    			echo "<button class=\"btn btn-success\" onclick=\"activarDesactivar('desactivarPl&&id_cd=$id_cd','$id_activar')\">Activado</button>";
+    		}
+    		else
+    		{
+    			echo "<button class=\"btn btn-danger\" onclick=\"activarDesactivar('activarPl&&id_cd=$id_cd','$id_activar')\">Desactivado</button>";
     		}
     		echo "</div>";
 		}

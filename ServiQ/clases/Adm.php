@@ -1278,6 +1278,7 @@
 				$set = "status = 0";
 				$condicion = "id_cd = $id_cd";
 				$this->myDao->updateData("cDia",$condicion,$set);
+				$this->myGui->activarDesactivarCDia($id_cd,0);
 				//header("Location: index.php");
 			}
 			elseif (isset($_GET["id_pl"])) 
@@ -1288,7 +1289,7 @@
 				$this->myDao->updateData("platillo",$condicion,$set);
 				$categoria = $this->myDao->consultaTabla("id_ct","platillo",$condicion);
 				$id_ct = $categoria[0]["id_ct"];
-				$this->myGui->activarDesactivar($id_pl,0);
+				$this->myGui->activarDesactivarPlatillo($id_pl,0);
 				//header("Location: index.php?op=vMenu&&id_ct=$id_ct");
 			}
 		}
@@ -1300,6 +1301,7 @@
 				$set = "status = 1";
 				$condicion = "id_cd = $id_cd";
 				$this->myDao->updateData("cDia",$condicion,$set);
+				$this->myGui->activarDesactivarCDia($id_cd,1);
 				//header("Location: index.php");
 			}
 			elseif (isset($_GET["id_pl"])) 
@@ -1310,7 +1312,7 @@
 				$this->myDao->updateData("platillo",$condicion,$set);
 				$categoria = $this->myDao->consultaTabla("id_ct","platillo",$condicion);
 				$id_ct = $categoria[0]["id_ct"];
-				$this->myGui->activarDesactivar($id_pl,1);
+				$this->myGui->activarDesactivarPlatillo($id_pl,1);
 				//header("Location: index.php?op=vMenu&&id_ct=$id_ct");
 			}
 		}
