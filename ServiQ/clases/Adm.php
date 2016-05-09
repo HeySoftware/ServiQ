@@ -619,12 +619,12 @@
 					$this->myDao->updateData("cliente","id_cl = $id_cl","saldo = $n_saldo");
 
 					// Mensaje de exito.
-					$this->myGui->mensaje(210);
+					//$this->myGui->mensaje(210);
 				}
 				else
 				{
 					// Saldo insuficiente.
-					$this->myGui->error(404);
+					//$this->myGui->error(404);
 				}	
 			}
 			// Si el platillo es de tipo comida del dia, se hace esto.
@@ -663,11 +663,11 @@
 					}
 					$n_saldo = $saldo - $precio;
 					$this->myDao->updateData("cliente","id_cl = $id_cl","saldo = $n_saldo");
-					$this->myGui->mensaje(210);
+					//$this->myGui->mensaje(210);
 				}
 				else
 				{
-					$this->myGui->error(404);
+					//$this->myGui->error(404);
 				}
 			}
 		}
@@ -1487,8 +1487,7 @@
 			else
 			{
 				$id_pl = $informacionCarrito[0]["id_pl"];
-				$cantidad = $informacionCarrito[0]["cantidad"];
-				echo $precio = $this->myDao->consultaTabla("precio", "platillo", "id_pl = $id_pl");		
+				$cantidad = $informacionCarrito[0]["cantidad"];	
 
 				$precio = (int) $precio[0]["precio"];
 				$cantidad = (int) $cantidad;
@@ -1504,7 +1503,6 @@
 			//2.>>>>>>> Se agrega el saldo nuevo
 			$this->myDao->updateData("cliente", "id_cl=".$idUsuario, "saldo=".$saldoNuevo);
 			$this->myDao->deleteData("carrito", "id_car=".$idCarrito);
-			header("Location: index.php?op=vCar");
 		}
 
 		public function doGet($op)

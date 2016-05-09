@@ -50,8 +50,13 @@ ob_start();
 			
 			//Se crea una instancia del administrador.
 			$objAdm= new Adm();
+			session_start();
 			//La operacion por default esta vacia.
-			
+			if(isset($_GET["op"]))
+			{
+				$op = $_GET["op"];
+				$objAdm->doGet($op);
+			}
 			//$op="";          
 			
 			//Se "Cacha el valor de la operacion"
@@ -62,7 +67,7 @@ ob_start();
 				$op=$_POST["op"];*/
 			
 			//Si hay usuarios, se debe iniciar sesion.
-			session_start();
+			
 			
 			//Operaciones en las que no estas dentro del sistema, pero no se quiere mostrar la forma de Iniciar Sesion.
 			/*if($op == "regForm" || $op == "regConf" || $op == "auth" || $op == "lgOut" || $op == "cod")

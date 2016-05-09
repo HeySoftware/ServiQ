@@ -3,6 +3,7 @@
 			
 	//Se crea una instancia del administrador.
 	$objAdm= new Adm();
+	session_start();
 	//La operacion por default esta vacia.
 	
 	$op="";          

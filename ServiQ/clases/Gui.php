@@ -77,7 +77,7 @@
 			                    			?>
 			                    			<a href="#" onclick="request('vPCliente')">Mis Pedidos</a>
 			                    			<a href="#" onclick="request('showFav')">Mis Favoritos</a>
-			                    			<a href="index.php?op=vBEntrada">Correo <span class="badge badge-success"><?php echo $bandeja;?></span></a>
+			                    			<a href="#" onclick="request('vBEntrada')">Correo <span class="badge badge-success"><?php echo $bandeja;?></span></a>
 			                    			<?php
 			                    		}
 			                    	?>
@@ -87,7 +87,7 @@
 									{
 										?>
 										<li>
-											<a href="index.php?op=vCar">Carrito <span class="badge"><?php echo $carrito; ?></span></a>
+											<a href="#" onclick="request('vCar')">Carrito <span class="badge"><?php echo $carrito; ?></span></a>
 										</li>
 										<?php
 									}
@@ -439,7 +439,7 @@
 			echo "<div class=\"table-responsive\">";
 			echo "<table class=\"table table-hover\">";
 				echo "<tr><th colspan='4' >¿Seguro(a) que desea dar de baja a $nombre ?</th></tr>";
-				echo "<tr><th> </th><th> </th><th><a class=\"btn btn-default\" href=\"index.php?op=saveBajaAdm&&id_ad=$id_ad\" role=\"button\">  Aceptar  </a></th><th><a class=\"btn btn-default\" href=\"index.php?op=consulAdm\" role=\"button\">  cancelar  </a></th></tr>";
+				echo "<tr><th> </th><th> </th><th><a class=\"btn btn-default\" href=\"index.php?op=saveBajaAdm&&id_ad=$id_ad\" role=\"button\">  Aceptar  </a></th><th><a class=\"btn btn-default\" href=\"index.php?op=consulAdm\" role=\"button\">  cancelar </a></th></tr>";
 			echo "</table></div></div>";
 
 		}
@@ -845,7 +845,7 @@
 	                    	}
 	                    	else
 	                    	{
-	                    		echo "<a class=\"btn btn-success\" href=index.php?op=aCar&&id_pl=$id_pl role=\"button\">Agregar a Carrito</a>";
+	                    		echo "<button class=\"btn btn-success\" onclick=\"request('aCar&&id_pl=$id_pl')\">Agregar a Carrito</button>";
 	                    	}
 	                    ?>
 	                </div> 
@@ -1417,7 +1417,7 @@
 					</h3>
 					<!-- Eliminar del Carrito -->
 					<?
-					echo "<a href=\"index.php?op=eliminarCarrito&&id_car=$id_car\"class=\"pull-right\" style=\"color:black\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>";
+					echo "<a href=\"#\" onclick=\"request('eliminarCarrito&&id_car=$id_car')\" class=\"pull-right\" style=\"color:black\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>";
 					?>
 	    			<div class="clearfix"></div>
 
@@ -1572,7 +1572,7 @@
 				    $id_pe=$favoritos[$i]["id_pe"];
 				    echo "<td><a class=\"btn btn-primary btn glyphicon glyphicon-star\" href=\"index.php?op=delFav&&id_pe=$id_pe&&id_cl=$id_cl\" Title=\"Quitar favorito\"></a></td>";
 
-				    echo "<td><a class=\"btn btn-success \" href=index.php?op=pFav&&id_pe=$id_pe role=\"button\">Agregar a Carrito</a></td></tr>";  
+				    echo "<td><button class=\"btn btn-success \" href=index.php?op=pFav&&id_pe=$id_pe role=\"button\">Agregar a Carrito</a></td></tr>";  
 
 				}
 				echo "</table>";
