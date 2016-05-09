@@ -20,19 +20,17 @@ function crearObjetoAJAX() {
 	}
 	return xmlhttp;
 }
-
-//Funcion de prueba:
-/**
-function updateProfile() {
-
-	//Creamos nuestro objeto AJAX:
-	var xmlhttp = crearObjetoAJAX();
-
-	//Creamos y enviamos nuestra data al server a traves del objeto.
-	//xmlhttp.open("GET", "nuestroCodigo.php", true);
-	//xmlhttp.send();
-**/
-
-
  
+function request(op){
+    var xhttp = new XMLHttpRequest();
+    var op = String(op);
+    xhttp.onreadystatechange = function(){
+        if(xhttp.readyState == 4 && xhttp.status == 200){
+            document.getElementById("todo").innerHTML = xhttp.responseText;
+        }
+    };
+    var url = "operador.php?op=";
+    var operacion= url.concat(op);
+    xhttp.open("GET",operacion, true);
+    xhttp.send();
 }

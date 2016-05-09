@@ -28,7 +28,8 @@
             	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 	<ul class="nav navbar-nav">                 	
                     	<li>
-                        	<a href="index.php">Comida del dia</a>
+                    		<a href="#" onclick="request('vPCliente')">Comida del Dia</a>
+                        	<!--<a href="index.php">Comida del dia</a>-->
                     	</li>
                     	<?php
                     		$n = count($categorias);
@@ -50,8 +51,7 @@
 									?>
 								</ul>
 	                    		</li>
-                    		<?php } ?>
-						
+                    		<?php } ?>					
 						<li role="presentation" class="dropdown">
         					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         					Ver

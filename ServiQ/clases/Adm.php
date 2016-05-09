@@ -13,8 +13,8 @@
 		public function __construct()
 		{
 			//Se incluyen las clases para poderlas usar.
-			include("/home/alumno/al342460/public_html/ServiQ/clases/Dao.php");
-			include("/home/alumno/al342460/public_html/ServiQ/clases/Gui.php");
+			include("clases/Dao.php");
+			include("clases/Gui.php");
 			
 			//Se crea un objeto de la clase Dao. Esta clase es la que se comunica con la base de datos.
 			$this->myDao= new Dao();
@@ -37,15 +37,7 @@
 		public function navBar()
 		{
 			//Modificacion Anairene.- Gestionar Admins
-			if(isset($_SESSION["adm"]))
-			{
-				$categorias = $this->myDao->consultaTabla("*","categoria");
-			}
-			else
-			{
-				$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
-			}
-			
+			$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
 			if(isset($_SESSION["adm"]))
 			{
 				$admin = $_SESSION["user"];
@@ -1362,6 +1354,7 @@
 			{
 				$id_pe=$favoritos[$i]["id_pe"];
 				$infoPlatillo=$this->myDao->consultaTabla("*","pedido","id_pe=$id_pe");
+
 				$id_pl = $infoPlatillo[0]["id_pl"]; 
 				$id_cd = $infoPlatillo[0]["id_cd"];
 
