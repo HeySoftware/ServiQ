@@ -28,7 +28,8 @@
             	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 	<ul class="nav navbar-nav">                 	
                     	<li>
-                        	<a href="index.php">Comida del dia</a>
+                    		<a href="#" onclick="request('')">Comida del Dia</a>
+                        	<!--<a href="index.php">Comida del dia</a>-->
                     	</li>
                     	<?php
                     		$n = count($categorias);
@@ -45,13 +46,12 @@
 										{
 											$categoria = $categorias[$i]["id_ct"];
 											$nombre = $categorias[$i]["categoria"];
-											echo "<li><a href=\"index.php?op=vMenu&&id_ct=$categoria\">$nombre</a></li>";
+											echo "<li><a href=\"#\" onclick=\"request('vMenu&&id_ct=$categoria')\">$nombre</a></li>";
 										}
 									?>
 								</ul>
 	                    		</li>
-                    		<?php } ?>
-						
+                    		<?php } ?>					
 						<li role="presentation" class="dropdown">
         					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         					Ver
@@ -64,20 +64,20 @@
 											//Anairene.- Gestionar Admins
 											if($validarSudo==1)
 											{
-                    							echo "<a href=\"index.php?op=consulAdm\">Admins</a>";
+                    							echo "<a href=\"#\" onclick=\"request('consulAdm')\">Admins</a>";
 												// Moxis
-                    							echo "<a href=\"index.php?op=recarga\">Recarga</a>";
+                    							echo "<a href=\"#\" onclick=\"request('recarga')\">Recarga</a>";
                     							//Moxis
 											}
 											//Fin Anairene.- Gestionar Admins
-			                    			echo "<a href=\"index.php?op=vPed\">Pedidos</a>";
+			                    			echo "<a href=\"#\" onclick=\"request('vPed')\">Pedidos</a>";
 			                    		}
 										else
 										{
 			                    			?>
-			                    			<a href="index.php?op=vPCliente">Mis Pedidos</a>
-			                    			<a href="index.php?op=showFav">Mis Favoritos</a>
-			                    			<a href="index.php?op=vBEntrada">Correo <span class="badge badge-success"><?php echo $bandeja;?></span></a>
+			                    			<a href="#" onclick="request('vPCliente')">Mis Pedidos</a>
+			                    			<a href="#" onclick="request('showFav')">Mis Favoritos</a>
+			                    			<a href="#" onclick="request('vBEntrada')">Correo <span class="badge badge-success"><?php echo $bandeja;?></span></a>
 			                    			<?php
 			                    		}
 			                    	?>
@@ -87,7 +87,7 @@
 									{
 										?>
 										<li>
-											<a href="index.php?op=vCar">Carrito <span class="badge"><?php echo $carrito; ?></span></a>
+											<a href="#" onclick="request('vCar')">Carrito <span class="badge"><?php echo $carrito; ?></span></a>
 										</li>
 										<?php
 									}
@@ -439,7 +439,7 @@
 			echo "<div class=\"table-responsive\">";
 			echo "<table class=\"table table-hover\">";
 				echo "<tr><th colspan='4' >¿Seguro(a) que desea dar de baja a $nombre ?</th></tr>";
-				echo "<tr><th> </th><th> </th><th><a class=\"btn btn-default\" href=\"index.php?op=saveBajaAdm&&id_ad=$id_ad\" role=\"button\">  Aceptar  </a></th><th><a class=\"btn btn-default\" href=\"index.php?op=consulAdm\" role=\"button\">  cancelar  </a></th></tr>";
+				echo "<tr><th> </th><th> </th><th><a class=\"btn btn-default\" href=\"index.php?op=saveBajaAdm&&id_ad=$id_ad\" role=\"button\">  Aceptar  </a></th><th><a class=\"btn btn-default\" href=\"index.php?op=consulAdm\" role=\"button\">  cancelar </a></th></tr>";
 			echo "</table></div></div>";
 
 		}
@@ -547,6 +547,10 @@
 				<?php
 				header("Refresh: 4; index.php");
 			}
+			// elseif($num == 2)
+			// {
+			// 	echo "<h3>Tu pedido ha entrado a la cola de pedidos. Por lo tanto no puede ser cancelada</h3>";
+			// }
 			elseif($num == 210)
 			{
 				echo "<h3>El platillo se ha agregado con exito.</h3>";
@@ -682,6 +686,16 @@
 			elseif($no == 90)
 			{
 				echo "Seleccione una cantidad.";
+			}
+			elseif($no == 660)
+			{
+				echo "<h3>No tienes pedidos pendientes</h3>";
+				?><a class="btn btn-default" href=index.php role="button">Regresar</a><?php
+			}
+			elseif($no == 670)
+			{
+				echo "<h3>No tienes notificaciones pendientes</h3>";
+				?><a class="btn btn-default" href=index.php role="button">Regresar</a><?php
 			}
 			else
 			{
@@ -831,27 +845,34 @@
 	                    <?php
 	                    	if(isset($_SESSION["adm"]))
 	                    	{
-
-	                    		echo "<a class=\"btn btn-primary\" href=index.php?op=mPl&&id_pl=$id_pl role=\"button\">Modificar</a>";
-	                    		if($status == 1)
-	                    		{
-	                    			echo "<a class=\"btn btn-success\" href=index.php?op=desactivarPl&&id_pl=$id_pl role=\"button\">Activado</a>";
-	                    		}
-	                    		else
-	                    		{
-	                    			echo "<a class=\"btn btn-danger\" href=index.php?op=activarPl&&id_pl=$id_pl role=\"button\">Desactivado</a>";
-	                    		}
-	                    		
+	                    		$this->activarDesactivar($id_pl,$status);	
 	                    	}
 	                    	else
 	                    	{
-	                    		echo "<a class=\"btn btn-success\" href=index.php?op=aCar&&id_pl=$id_pl role=\"button\">Agregar a Carrito</a>";
+	                    		echo "<button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#aCar\" onclick=\"agregarCarrito('id_pl=$id_pl')\">Agregar a Carrito</button>";
 	                    	}
 	                    ?>
 	                </div> 
 			    </div>
 			    </div>
 			    </div>
+
+			    <div class="modal fade" id="aCar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Has Agregado al Carrito</h4>
+				      </div>
+				      <div class="modal-body">
+				        Puedes ver tu carrito en la pesta&ntilde;a Ver/Carrito.
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 				<?php
 				}
 			}
@@ -957,6 +978,7 @@
 					</div>
 				
 			</div>
+
 			<?php
 		}
 		//FIN MOXXIS,
@@ -1094,13 +1116,30 @@
 	                    	}
 	                    	else
 	                    	{
-	                    		echo "<a class=\"btn btn-success\" href=index.php?op=aCar&&id_cd=$id_cd role=\"button\">Agregar a Carrito</a>";
+	                    		echo "<button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#aCar\" onclick=\"agregarCarrito('id_cd=$id_cd')\">Agregar a Carrito</button>";
 	                    	}
 	                    ?>
 	                </div> 
 			    </div>
 			    </div>
 			    </div>
+
+			    <div class="modal fade" id="aCar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Has Agregado al Carrito</h4>
+				      </div>
+				      <div class="modal-body">
+				        Puedes ver tu carrito en la pesta&ntilde;a Ver/Carrito.
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 				<?php
 				}
 			}
@@ -1118,12 +1157,7 @@
 			$cantidad = count($pedidos);
 			if ($cantidad == 0)
 			{
-				?>
-				<div class="alert alert-danger" role="alert">
-				<h3>No tienes pedidos pendientes.</h3><br/>
-				<a class="btn btn-default" href=index.php role="button">Regresar</a>
-				</div>
-				<?php
+				$this->error(660);
 			}
 			else
 			{
@@ -1226,12 +1260,7 @@
 			$cantidad = count($notificaciones);
 			if ($cantidad == 0)
 			{
-				?>
-				<div class="alert alert-danger" role="alert">
-				<h3>No tienes notificaciones disponibles.<h3><br/>
-				<a class="btn btn-default" href=index.php role="button">Regresar</a>
-				</div>
-				<?php
+				$this->error(670);
 			}
 			else
 			{
@@ -1416,8 +1445,8 @@
 						?>
 					</h3>
 					<!-- Eliminar del Carrito -->
-					<?
-					echo "<a href=\"index.php?op=eliminarCarrito&&id_car=$id_car\"class=\"pull-right\" style=\"color:black\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>";
+					<?php
+					echo "<button type=\"button\" onclick=\"eliminarCarrito('id_car=$id_car')\" class=\"btn btn-secondary pull-right\" style=\"color:black\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>";
 					?>
 	    			<div class="clearfix"></div>
 
@@ -1473,25 +1502,9 @@
 								<label class="col-sm-2 control-label">Cantidad</label>
 
 								<div class="col-sm-4">
-									<p><?php
-									if($cantidad == 1)
-									{
-										echo "<a href=\"index.php?op=dCan&&id_car=$id_car\" class=\"btn btn-success disabled\">-</a> ";
-									}
-									else
-									{
-										echo "<a href=\"index.php?op=dCan&&id_car=$id_car\" class=\"btn btn-success\">-</a> ";
-									}
-									echo "$cantidad";
-									if($saldo >= $precio)
-									{
-									echo " <a href=\"index.php?op=aCan&&id_car=$id_car\" class=\"btn btn-success\">+</a>";
-									}
-									else
-									{
-										echo " <a href=\"index.php?op=aCan&&id_car=$id_car\" class=\"btn btn-success disabled\">+</a>";
-									}
-									?></p>
+								<?php
+									$this->modificarCantidad($cantidad,$saldo,$precio,$id_car);
+								?>
 								</div>
 							</div>
 					</div>
@@ -1572,7 +1585,7 @@
 				    $id_pe=$favoritos[$i]["id_pe"];
 				    echo "<td><a class=\"btn btn-primary btn glyphicon glyphicon-star\" href=\"index.php?op=delFav&&id_pe=$id_pe&&id_cl=$id_cl\" Title=\"Quitar favorito\"></a></td>";
 
-				    echo "<td><a class=\"btn btn-success \" href=index.php?op=pFav&&id_pe=$id_pe role=\"button\">Agregar a Carrito</a></td></tr>";  
+				    echo "<td><button class=\"btn btn-success \" href=index.php?op=pFav&&id_pe=$id_pe role=\"button\">Agregar a Carrito</a></td></tr>";  
 
 				}
 				echo "</table>";
@@ -1582,5 +1595,45 @@
 		}
 		/// FIN GABY ///
 		
+
+		public function modificarCantidad($cantidad,$saldo,$precio,$id_car)
+		{ 
+			$id = "cantidad".$id_car;
+			echo "<p id=\"$id\">";
+			if($cantidad == 1)
+			{
+				echo "<button type=\"button\" class=\"btn btn-success disabled\"> - </button> ";
+			}
+			else
+			{
+				echo "<button type=\"button\" onclick=\"cantidad('dCan&&id_car=$id_car','$id_car')\" class=\"btn btn-success\"> - </button>";
+			}
+			echo " $cantidad ";
+			if($saldo >= $precio)
+			{
+			echo " <button type=\"button\" onclick=\"cantidad('aCan&&id_car=$id_car','$id_car')\" class=\"btn btn-success\"> + </button>";
+			}
+			else
+			{
+				echo " <button type=\"button\" class=\"btn btn-success disabled\"> + </button>";
+			}
+			?></p><?php
+		}
+
+		public function activarDesactivar($id_pl,$status)
+		{
+			$id_activar = "activar".$id_pl;
+    		echo "<div id=\"$id_activar\">";
+    		echo "<button class=\"btn btn-primary\" onclick=\"request('mPl&&id_pl=$id_pl')\">Modificar</button>";
+    		if($status == 1)
+    		{
+    			echo "<button class=\"btn btn-success\" onclick=\"activarDesactivar('desactivarPl&&id_pl=$id_pl','$id_activar')\">Activado</button>";
+    		}
+    		else
+    		{
+    			echo "<button class=\"btn btn-danger\" onclick=\"activarDesactivar('activarPl&&id_pl=$id_pl','$id_activar')\">Desactivado</button>";
+    		}
+    		echo "</div>";
+		}
 	}
 ?>

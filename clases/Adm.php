@@ -13,8 +13,8 @@
 		public function __construct()
 		{
 			//Se incluyen las clases para poderlas usar.
-			include("/home/alumno/al342460/public_html/ServiQ/clases/Dao.php");
-			include("/home/alumno/al342460/public_html/ServiQ/clases/Gui.php");
+			include("clases/Dao.php");
+			include("clases/Gui.php");
 			
 			//Se crea un objeto de la clase Dao. Esta clase es la que se comunica con la base de datos.
 			$this->myDao= new Dao();
@@ -37,15 +37,7 @@
 		public function navBar()
 		{
 			//Modificacion Anairene.- Gestionar Admins
-			if(isset($_SESSION["adm"]))
-			{
-				$categorias = $this->myDao->consultaTabla("*","categoria");
-			}
-			else
-			{
-				$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
-			}
-			
+			$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
 			if(isset($_SESSION["adm"]))
 			{
 				$admin = $_SESSION["user"];
@@ -627,12 +619,12 @@
 					$this->myDao->updateData("cliente","id_cl = $id_cl","saldo = $n_saldo");
 
 					// Mensaje de exito.
-					$this->myGui->mensaje(210);
+					//$this->myGui->mensaje(210);
 				}
 				else
 				{
 					// Saldo insuficiente.
-					$this->myGui->error(404);
+					//$this->myGui->error(404);
 				}	
 			}
 			// Si el platillo es de tipo comida del dia, se hace esto.
@@ -671,11 +663,11 @@
 					}
 					$n_saldo = $saldo - $precio;
 					$this->myDao->updateData("cliente","id_cl = $id_cl","saldo = $n_saldo");
-					$this->myGui->mensaje(210);
+					//$this->myGui->mensaje(210);
 				}
 				else
 				{
-					$this->myGui->error(404);
+					//$this->myGui->error(404);
 				}
 			}
 		}
@@ -950,8 +942,7 @@
 					$this->myDao->updateData("carrito","id_car = $id_car","cantidad = $cantidad");
 				}
 			}
-			// Redirecciona al carrito.
-			header('Location: index.php?op=vCar');
+			$this->myGui->modificarCantidad($cantidad,$saldo,$precio,$id_car);
 		}
 
 		/*
@@ -995,8 +986,7 @@
 					$this->myDao->updateData("carrito","id_car = $id_car","cantidad = $cantidad");
 				}
 			}
-			// Redirecciona al carrito.
-			header('Location: index.php?op=vCar');
+			$this->myGui->modificarCantidad($cantidad,$saldo,$precio,$id_car);
 		}
 
 		/* 
@@ -1287,20 +1277,19 @@
 				$id_cd = $_GET["id_cd"];
 				$set = "status = 0";
 				$condicion = "id_cd = $id_cd";
-				echo $condicion;
 				$this->myDao->updateData("cDia",$condicion,$set);
-				header("Location: index.php");
+				//header("Location: index.php");
 			}
 			elseif (isset($_GET["id_pl"])) 
 			{
 				$id_pl = $_GET["id_pl"];
 				$set = "status = 0";
 				$condicion = "id_pl = $id_pl";
-				echo $condicion;
 				$this->myDao->updateData("platillo",$condicion,$set);
 				$categoria = $this->myDao->consultaTabla("id_ct","platillo",$condicion);
 				$id_ct = $categoria[0]["id_ct"];
-				header("Location: index.php?op=vMenu&&id_ct=$id_ct");
+				$this->myGui->activarDesactivar($id_pl,0);
+				//header("Location: index.php?op=vMenu&&id_ct=$id_ct");
 			}
 		}
 		public function activarPl()
@@ -1310,20 +1299,19 @@
 				$id_cd = $_GET["id_cd"];
 				$set = "status = 1";
 				$condicion = "id_cd = $id_cd";
-				echo $condicion;
 				$this->myDao->updateData("cDia",$condicion,$set);
-				header("Location: index.php");
+				//header("Location: index.php");
 			}
 			elseif (isset($_GET["id_pl"])) 
 			{
 				$id_pl = $_GET["id_pl"];
 				$set = "status = 1";
 				$condicion = "id_pl = $id_pl";
-				echo $condicion;
 				$this->myDao->updateData("platillo",$condicion,$set);
 				$categoria = $this->myDao->consultaTabla("id_ct","platillo",$condicion);
 				$id_ct = $categoria[0]["id_ct"];
-				header("Location: index.php?op=vMenu&&id_ct=$id_ct");
+				$this->myGui->activarDesactivar($id_pl,1);
+				//header("Location: index.php?op=vMenu&&id_ct=$id_ct");
 			}
 		}
 		//Fin Baja de Platillos y Comida del Dia
@@ -1362,6 +1350,7 @@
 			{
 				$id_pe=$favoritos[$i]["id_pe"];
 				$infoPlatillo=$this->myDao->consultaTabla("*","pedido","id_pe=$id_pe");
+
 				$id_pl = $infoPlatillo[0]["id_pl"]; 
 				$id_cd = $infoPlatillo[0]["id_cd"];
 
@@ -1494,8 +1483,7 @@
 			else
 			{
 				$id_pl = $informacionCarrito[0]["id_pl"];
-				$cantidad = $informacionCarrito[0]["cantidad"];
-				echo $precio = $this->myDao->consultaTabla("precio", "platillo", "id_pl = $id_pl");		
+				$cantidad = $informacionCarrito[0]["cantidad"];	
 
 				$precio = (int) $precio[0]["precio"];
 				$cantidad = (int) $cantidad;
@@ -1511,7 +1499,8 @@
 			//2.>>>>>>> Se agrega el saldo nuevo
 			$this->myDao->updateData("cliente", "id_cl=".$idUsuario, "saldo=".$saldoNuevo);
 			$this->myDao->deleteData("carrito", "id_car=".$idCarrito);
-			header("Location: index.php?op=vCar");
+
+			$this->verCarrito();
 		}
 
 		public function doGet($op)
