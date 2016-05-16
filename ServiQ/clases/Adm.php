@@ -37,15 +37,16 @@
 		public function navBar()
 		{
 			//Modificacion Anairene.- Gestionar Admins
-			$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
 			if(isset($_SESSION["adm"]))
 			{
+				$categorias = $this->myDao->consultaTabla("*","categoria");
 				$admin = $_SESSION["user"];
 				$sudo = $this->myDao->consultaTabla("sudo_su","administrador","usuario='".$admin."'");
 				$this->myGui->navBar($categorias,"","",$sudo[0]["sudo_su"]);
 			}
 			else
 			{
+				$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
 				$id_cl = $this->getIdUser();
 				$carrito = $this->myDao->consultaTabla("*","carrito","id_cl = $id_cl");
 				$bandeja = $this->myDao->consultaTabla("*","notificacion","id_cl = $id_cl and estado = 0");
@@ -229,7 +230,7 @@
 		public function verPedidos()
 		{
 			$columna = "id_pe,id_cl,id_pl,id_cd,fecha_hora,status,descripcion";
-			$condicion = "status = 'PENDIENTE'";
+			$condicion = "status = 'PENDIENTE' or status = 'LISTO'";
 			$pedidos = $this->myDao->consultaTabla($columna,"pedido",$condicion);
 			$nombres = array();
 			$clientes = array();
@@ -261,8 +262,16 @@
           */
 		public function cambiarEstado()
 		 {
-			$id_pe = $_GET["id_pe"];
-			$this->myDao->updateData("pedido","id_pe = $id_pe", "status = 'LISTO'");
+		 	$id_pe = $_GET["id_pe"];
+		 	$estado = $_GET["est"];
+		 	$status = "status = 'LISTO'";
+		 	if($estado == 1)
+		 	{
+		 		$status = "status = 'ENTREGADO'";
+		 	}
+		 	echo $status;
+			$this->myDao->updateData("pedido","id_pe = $id_pe", $status);
+
 		 }
 		/**
           * Envia la notificacion de que el pedido ya está listo al cliente.
@@ -281,7 +290,6 @@
 				$id_cl = $id_cl[0][0];
 				$valores = "$id_cl,'PEDIDO CANCELADO','Tu pedido ha sido cancelado satisfactoriamente.'";
 				$this->myDao->insertarEnTabla("notificacion",$columnas,$valores);
-				header("Location: index.php?op=vPCliente");
 			}
 			elseif($msj == 2)
 			{
@@ -289,7 +297,6 @@
 				$id_cl = $id_cl[0][0];
 				$valores = "$id_cl,'PEDIDO LISTO','Tu pedido es el n&uacute;mero: $id_pe y ya se encuentra listo, ya puedes pasar a recogerlo a la cafeter&iacute;a.'";
 				$this->myDao->insertarEnTabla("notificacion",$columnas,$valores);
-				header("Location: index.php?op=vPed");
 			}
 			elseif ($msj == 1)
 			{
@@ -330,7 +337,7 @@
 			$categoria = $this->myDao->consultaTabla("*","categoria","id_ct=$id_ct");
 			$nombre_cat = $categoria[0]["categoria"];
 			$platillos = $this->myDao->consultaTabla("*","platillo","id_ct = $id_ct");
-			$this->myGui->verMenu($nombre_cat,$platillos,$saldo2);
+			$this->myGui->verMenu($nombre_cat,$platillos,$saldo2,$id_ct);
 
 		}
 		
@@ -503,8 +510,8 @@
 				$this->myDao->updateData("cliente",$condicion,$set);
 
 				$this->myDao->deleteData("pedido", "id_pe = $id_pe");
-				header("Location: index.php?op=vPCliente");
 			}
+			$this->verPedidosCliente();
 		}
 		/**
           * Cambia el estado de la notificacion a visto. 
@@ -516,7 +523,7 @@
 			$id_no = $_GET["id_no"];
 			$condicion = "id_no = $id_no";
 			$this->myDao->updateData("notificacion", $condicion, "estado = 1");
-			header("Location: index.php?op=vBEntrada");
+			$this->verBandejaEntrada();
 		}
 		/**
           * Elimina la notificacion de la base de datos. 
@@ -528,7 +535,7 @@
 		{
 			$id_no = $_GET["id_no"];
 			$this->myDao->deleteData("notificacion","id_no = $id_no");
-			header("Location: index.php?op=vBEntrada");
+			$this->verBandejaEntrada();
 		}
 		/**
          *	Manda llamar la funcion "consultaTabla", consulta la informacion de las notificaciones.
@@ -620,11 +627,21 @@
 
 					// Mensaje de exito.
 					//$this->myGui->mensaje(210);
+					?>
+						<script>
+							request('msj&&no=210');
+						</script>
+					<?php
 				}
 				else
 				{
 					// Saldo insuficiente.
 					//$this->myGui->error(404);
+					?>
+						<script>
+							request('err&&no=404');
+						</script>
+					<?php
 				}	
 			}
 			// Si el platillo es de tipo comida del dia, se hace esto.
@@ -664,10 +681,20 @@
 					$n_saldo = $saldo - $precio;
 					$this->myDao->updateData("cliente","id_cl = $id_cl","saldo = $n_saldo");
 					//$this->myGui->mensaje(210);
+					?>
+						<script>
+							request('msj&&no=210');
+						</script>
+					<?php
 				}
 				else
 				{
 					//$this->myGui->error(404);
+					?>
+						<script>
+							request('err&&no=404');
+						</script>
+					<?php
 				}
 			}
 		}
@@ -701,7 +728,7 @@
 				$saldo = intval($info_cliente[0]["saldo"]);
 
 				// Se inicia el total igual a 0, despues de calcula.
-				$total = 0;
+				$total = $this->calcularTotal();
 
 				// Este for recorre cada elemento del carrito.
 				for($i=0;$i<$n;$i++)
@@ -723,7 +750,7 @@
 						// No considera la cantidad de cada platillo.
 						// Entonces se multiplica el precio por la cantidad.
 						$precio = $datosPlatillo[0]["precio"];
-						$total = $total + intval($precio)*intval($cantidad);
+						//$total = $total + intval($precio)*intval($cantidad);
 
 						// Segunda parte del Carrito
 						// Aqui se manda toda la informacion del platillo
@@ -742,7 +769,7 @@
 						$id_car = $carrito[$i]["id_car"];
 
 						$precio = $datosPlatillo[0]["precio"];
-						$total = $total + intval($precio)*intval($cantidad);
+						//$total = $total + intval($precio)*intval($cantidad);
 
 						$this->myGui->verCarritoB($datosPlatillo,$descripcion,$id_car,false,$cantidad,$saldo);
 					}				
@@ -840,11 +867,21 @@
 					// Aqui se elige el mensaje, si se envio o solo se guardo.
 					if(isset($_POST['boton_enviar']))
 					{
-						$this->myGui->mensaje(3);
+						?>
+						<script>
+							request('msj&&no=4','todo');
+						</script>
+						<?php
+						header("Refresh: 5; index.php");
 					}
 					else
 					{
-						$this->myGui->mensaje(10);
+						?>
+						<script>
+							request('msj&&no=10','todo');
+						</script>
+						<?php
+						header("Refresh: 4; index.php");
 					}
 				}
 			}
@@ -942,9 +979,8 @@
 					$this->myDao->updateData("carrito","id_car = $id_car","cantidad = $cantidad");
 				}
 			}
-			$this->myGui->modificarCantidad($cantidad,$saldo,$precio,$id_car);
+			$this->verCarrito();
 		}
-
 		/*
 		* Lo mismo que aumentarCantidad solo que se resta en 1.
 		*/
@@ -986,7 +1022,7 @@
 					$this->myDao->updateData("carrito","id_car = $id_car","cantidad = $cantidad");
 				}
 			}
-			$this->myGui->modificarCantidad($cantidad,$saldo,$precio,$id_car);
+			$this->verCarrito();
 		}
 
 		/* 
@@ -1079,20 +1115,35 @@
 					if($error == 1)
 					{
 						// si asi fue, mandamos mensaje de exito.
-						$this->myGui->mensaje(5);
+						//$this->myGui->mensaje(5);
+						?>
+							<script>
+								request('msj&&no=5','todo');
+							</script>
+						<?php
 					}
 					else
 					{
 						//En caso contrario, mandamos mensaje de error.
-						$this->myGui->error(613);
-						header("Refresh: 3;index.php?op=consulAdm");
+						//$this->myGui->error(613);
+						?>
+							<script>
+								request('err&&no=613','todo');
+							</script>
+						<?php
+						//header("Refresh: 3;index.php?op=consulAdm");
 					}
 				}
 				else
 				{
 					// En caso de encontrar usuarios o correos iguales, mandamos mensaje de error.
-					$this->myGui->error(614);
-					header("Refresh: 3;index.php?op=anadirAdm");
+					//$this->myGui->error(614);
+					?>
+						<script>
+							request('err&&no=614','todo');
+						</script>
+					<?php
+					//header("Refresh: 3;index.php?op=anadirAdm");
 				}
 			}
 		}
@@ -1163,21 +1214,36 @@
 					if($error == 1)
 					{
 						//Si no fue asi, se manda mensaje de actualizacion exitosa.
-						$this->myGui->mensaje(6);
-						header("Refresh: 3;index.php?op=consulAdm");
+						//$this->myGui->mensaje(6);
+						?>
+							<script>
+								request('msj&&no=6','todo');
+							</script>
+						<?php
+						//header("Refresh: 3;index.php?op=consulAdm");
 					}
 					else
 					{
 						//En caso contrario, se manda mensaje de error.
-						$this->myGui->error(616);
-						header("Refresh: 3;index.php?op=consulAdm");
+						//$this->myGui->error(616);
+						?>
+							<script>
+								request('err&&no=616','todo');
+							</script>
+						<?php
+						//header("Refresh: 3;index.php?op=consulAdm");
 					}
 				}
 				else
 				{
 					//En caso de que se este actualizando un correo repetido, se mandara un mensaje de error.
-					$this->myGui->error(615);
-					header("Refresh: 3;index.php?op=modifAdm&&$id_ad");
+					//$this->myGui->error(615);
+					?>
+						<script>
+							request('err&&no=615','todo');
+						</script>
+					<?php
+					//header("Refresh: 3;index.php?op=modifAdm&&$id_ad");
 				}
 			}
 			
@@ -1208,13 +1274,23 @@
 
 			if($error == 1)
 			{
-				$this->myGui->mensaje(7);
-				header("Refresh: 3;index.php?op=consulAdm");
+				//$this->myGui->mensaje(7);
+				?>
+					<script>
+						request('msj&&no=7','todo');
+					</script>
+				<?php
+				//header("Refresh: 3;index.php?op=consulAdm");
 			}
 			else
 			{
-				$this->myGui->error(617);
-				header("Refresh: 3;index.php?op=consulAdm");
+				//$this->myGui->error(617);
+				?>
+					<script>
+						request('err&&no=617','todo');
+					</script>
+				<?php
+				//header("Refresh: 3;index.php?op=consulAdm");
 			}
 		}
 		
@@ -1247,13 +1323,19 @@
 			$infoUsu = $this->myDao->consultaTabla("*","cliente",$condicion); //Saca la informacion del usuario.
 			if ($cantidadCB == "")
 			{
-				$this->myGui->error(90);
-				header("Refresh: 3;index.php?op=recarga");
+				?>
+					<script>
+						request('err&&no=90','todo');
+					</script>
+				<?php
 			}
 			elseif (count($infoUsu) == 0) // revisa que el usuario exista.
 			{
-				$this->myGui->error(619);
-				header("Refresh: 3;index.php?op=recarga");
+				?>
+					<script>
+						request('err&&no=619','todo');
+					</script>
+				<?php
 			}
 			else
 			{
@@ -1262,8 +1344,11 @@
 				$condicion2 = "correo = '$correo'";
 				$set = "saldo = $total";
 				$this->myDao->updateData("cliente",$condicion,$set);
-				$this->myGui->mensaje(646);
-				header("Refresh: 3;index.php?op=recarga");
+				?>
+					<script>
+						request('msj&&no=646','todo');
+					</script>
+				<?php
 			}
 			
 
@@ -1393,11 +1478,11 @@
 			$this->myDao->deleteData("favoritos", "id_pe=$id_pe");
 			if($_GET["l"]==1)
 			{
-				header("Location: index.php?op=vPCliente");
+				$this->verPedidosCliente();
 			}
 			else
 			{
-				header("Location: index.php?op=showFav");
+				$this->showFavorito();
 			}
 		}
 
@@ -1426,6 +1511,188 @@
 				$tipo="comida";
 			}
 			$this->agregarCarrito($id_cd_pl,$desc,$tipo);
+			$this->showFavorito();
+		}
+		
+		///AGREGAR PLATILLOS 
+		public function agregarPlatillo()
+		{
+				$id_ct=$_GET["id_ct"];
+				$categorias=$this->myDao->consultaTabla("*", "categoria");
+				$this->myGui->agregarPlatillo($categorias, $id_ct);
+		}
+
+		public function guardarPlatillo()
+		{
+			$pl=$_POST["pl"];
+			$id_ct=$_GET["id_ct"];
+			
+			if($pl["platillo"] == "")
+			{
+				$this->myGui->error(731);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			elseif($pl["id_ct"] == "")
+			{
+				$this->myGui->error(737);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			elseif($pl["precio"] == "")
+			{
+				$this->myGui->error(732);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+			
+			elseif($pl["duracion"] == "")
+			{
+				$this->myGui->error(734);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			
+			elseif($pl["ingrediente"] == "")
+			{
+				$this->myGui->error(735);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			elseif($pl["imagen"] == "")
+			{
+				$this->myGui->error(736);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			else
+			{
+				$platillo=$pl["platillo"];
+				//Verificamos que no haya platillos iguales.
+				$plRepetido = $this->myDao->consultaTabla("*","platillo","platillo='$platillo'");
+				//echo $plRepetido[0]["platillo"];
+				if(count($plRepetido)== 0)
+				{
+					//En caso de que no suceda, mandamos al dao a que inserte el nuevo registro.
+					//,'".$pl["status"]."',
+					$columnas = "id_ct,platillo,precio,status,duracion,ingrediente,imagen";
+					$valores = "'".$pl["id_ct"]."','".$pl["platillo"]."','".$pl["precio"]."','0','".$pl["duracion"]."','".$pl["ingrediente"]."','".$pl["imagen"]."'";
+					$error = $this->myDao->insertarEnTabla("platillo", $columnas, $valores);
+					//Verificamos si se realizo la insercion con exito
+					if($error == 1)
+					{
+						// si asi fue, mandamos mensaje de exito.
+						$this->myGui->mensaje(20);
+					}
+					else
+					{
+						//En caso contrario, mandamos mensaje de error.
+						$this->myGui->error(613);
+						header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+					}
+				}
+				else
+				{
+					// En caso de encontrar platillos iguales
+					$this->myGui->error(742); 
+					header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+				}
+			}
+			
+
+		}
+
+		public function agregarComida()
+		{
+			$this->myGui->agregarComida();
+		}
+
+		public function guardarComida()
+		{
+			$cd=$_POST["cd"];
+			
+			if($cd["p_fuerte"] == "")
+			{
+				$this->myGui->error(738);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			elseif($cd["p_chico"] == "")
+			{
+				$this->myGui->error(739);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			elseif($cd["bebida"] == "")
+			{
+				$this->myGui->error(740);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+			elseif($cd["precio"] == "")
+			{
+				$this->myGui->error(733);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+			
+			elseif($cd["ingredientes"] == "")
+			{
+				$this->myGui->error(734);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			
+			elseif($cd["p_entrada"] == "")
+			{
+				$this->myGui->error(741);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+
+			elseif($cd["duracion"] == "")
+			{
+				$this->myGui->error(734);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			elseif($cd["imagen"] == "")
+			{
+				$this->myGui->error(736);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			else
+			{
+				$p_fuerte=$cd["p_fuerte"];
+				//Verificamos que no haya platillos iguales.
+				$cdRepetido = $this->myDao->consultaTabla("*","cDia","p_fuerte='$p_fuerte'");
+				//echo $plRepetido[0]["platillo"];
+				if(count($cdRepetido)== 0)
+				{
+					//En caso de que no suceda, mandamos al dao a que inserte el nuevo registro.
+					$columnas = "p_fuerte,p_chico,bebida,precio,ingredientes,p_entrada,status,duracion,imagen";
+					$valores = "'".$cd["p_fuerte"]."','".$cd["p_chico"]."','".$cd["bebida"]."','".$cd["precio"]."','".$cd["ingredientes"]."','".$cd["p_entrada"]."','0','".$cd["duracion"]."','".$cd["imagen"]."'";
+					$error = $this->myDao->insertarEnTabla("cDia", $columnas, $valores);
+					//Verificamos si se realizo la insercion con exito
+					if($error == 1)
+					{
+						// si asi fue, mandamos mensaje de exito.
+						$this->myGui->mensaje(20);
+					}
+					else
+					{
+						//En caso contrario, mandamos mensaje de error.
+						$this->myGui->error(613);
+						header("Refresh: 3;index.php?op=addCd");
+					}
+				}
+				else
+				{
+					// En caso de encontrar platillos iguales
+					$this->myGui->error(742); 
+					header("Refresh: 3;index.php?op=addCd");
+				}
+			}
+			
+
 		}
 		////FIN GABY
 		///
@@ -1504,6 +1771,44 @@
 
 			$this->verCarrito();
 		}
+
+		public function mensaje()
+		{
+			$numero = $_GET["no"];
+			$this->myGui->mensaje($numero);
+		}
+
+		public function error()
+		{
+			$numero = $_GET["no"];
+			$this->myGui->error($numero);
+		}
+		//Calcula el total a pagar de los platillos que se encuentran en el carrito.
+		public function calcularTotal()
+		{
+			$id_cl = $this->getIdUser();
+			$carrito_info = $this->myDao->consultaTabla("*","carrito","id_cl=$id_cl");
+			$n = count($carrito_info);
+			$total = 0;
+			for($i=0;$i<$n;$i++)
+			{
+				if(isset($carrito_info[$i]["id_pl"]))
+				{
+					$id_pl = $carrito_info[$i]["id_pl"];
+					$platillo_info = $this->myDao->consultaTabla("*","platillo","id_pl=$id_pl");
+				}
+				else
+				{
+					$id_cd = $carrito_info[$i]["id_cd"];
+					$platillo_info = $this->myDao->consultaTabla("*","cDia","id_cd=$id_cd");
+				}
+				$cantidad = $carrito_info[$i]["cantidad"];
+				$precio = $platillo_info[0]["precio"];
+				$total = $total + $precio*$cantidad;
+			}
+			return $total;
+		}
+
 
 		public function doGet($op)
 		{
@@ -1586,6 +1891,28 @@
 					$msj = $_GET["msj"];
 					$this->mandarNotificacion($id_pe,0,$msj);
 					$this->cambiarEstado();
+					break;
+				
+				//Gaby-Agregar Platillos y comida al menu
+				case "addPl":
+					$this->agregarPlatillo();
+					break;
+
+				case "saveNPl":
+					$this->guardarPlatillo();
+					break;
+
+				case "addCd":
+					$this->agregarComida();
+					break;
+
+				case "saveNCd":
+					$this->guardarComida();
+					break;
+				//
+				case "cEstP":
+					$this->cambiarEstado();
+					header('Location: index.php?op=vPed');
 					break;
 				case "vBEntrada":
 					$this->verBandejaEntrada();
@@ -1841,6 +2168,14 @@
 
 				case "eliminarCarrito":
 					$this->eliminarCarrito();
+					break;
+
+				case "msj":
+					$this->mensaje();
+					break;
+
+				case "err":
+					$this->error();
 					break;
 			}
 		}
