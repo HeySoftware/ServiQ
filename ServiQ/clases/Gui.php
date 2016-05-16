@@ -321,7 +321,7 @@
 				?>
 				<div class="alert alert-danger" role="alert">
 				<h3>No hay cuentas de Administrador.</h3><br/>
-				<a class="btn btn-default" href=index.php role="button">Regresar</a>
+				<button class="btn btn-default" onclick="request('','todo')" type="button">Regresar</a>
 				</div>
 				<?php
 			}
@@ -331,7 +331,7 @@
 				<div class="panel panel-default">
 				<div class="table-responsive">
 				<table class="table table-hover">
-				<tr><th>ID</th><th>NOMBRE</th><th>USUARIO</th><th align="right"><a class="btn btn-warning" href=index.php?op=anadirAdm role="button"><strong>A&Ntilde;ADIR ADMIN</strong></a></th></tr>
+				<tr><th>ID</th><th>NOMBRE</th><th>USUARIO</th><th align="right"><button class="btn btn-warning" onclick="request('anadirAdm','todo')" type="button"><strong>A&Ntilde;ADIR ADMIN</strong></button></th></tr>
 				<?php
 				for ($i=0;$i<$cantidad;$i++)
 				{
@@ -339,7 +339,7 @@
 					echo "<tr><td>".$admins[$i]["id_ad"]."</td>";
 					echo "<td>".$admins[$i]["nombre"]."</td>";
 					echo "<td>".$admins[$i]["usuario"]."</td>";
-					echo "<td align=\"right\"><a class=\"btn btn-success\" href=\"index.php?op=verAdm&&id_ad=$id_ad\" role=\"button\">Ver</a> <a class=\"btn btn-primary\" href=\"index.php?op=modifAdm&&id_ad=$id_ad\" role=\"button\">Modificar</a> <a class=\"btn btn-danger\" href=\"index.php?op=bajaAdm&&id_ad=$id_ad\" role=\"button\">Baja</a></td>";
+					echo "<td align=\"right\"><button class=\"btn btn-success\" onclick=\"request('verAdm&&id_ad=$id_ad','todo')\" type=\"button\">Ver</button> <button class=\"btn btn-primary\" onclick=\"request('modifAdm&&id_ad=$id_ad','todo')\" type=\"button\">Modificar</button> <button class=\"btn btn-danger\" onclick=\"request('bajaAdm&&id_ad=$id_ad','todo')\" type=\"button\">Baja</button></td>";
 					echo "</tr>";
 				}
 				echo "</table>";
@@ -416,7 +416,7 @@
 							echo "<div class=\"form-group\">";
 							echo "<div class=\"col-sm-offset-2 col-xs-8\">";
 								echo "<button type=\"submit\" class=\"btn btn-success\">Guardar</button>";
-								echo "<a class=\"btn btn-default\" href=\"index.php?op=consulAdm\" role=\"button\">Regresar</a>";
+								echo "<button class=\"btn btn-default\" onclick=\"request('consulAdm','todo')\" type=\"button\">Regresar</button>";
 								echo "</div>";
 							echo "</div>";
 					
@@ -439,7 +439,7 @@
 			echo "<div class=\"table-responsive\">";
 			echo "<table class=\"table table-hover\">";
 				echo "<tr><th colspan='4' >¿Seguro(a) que desea dar de baja a $nombre ?</th></tr>";
-				echo "<tr><th> </th><th> </th><th><a class=\"btn btn-default\" href=\"index.php?op=saveBajaAdm&&id_ad=$id_ad\" role=\"button\">  Aceptar  </a></th><th><a class=\"btn btn-default\" href=\"index.php?op=consulAdm\" role=\"button\">  cancelar </a></th></tr>";
+				echo "<tr><th> </th><th> </th><th><button class=\"btn btn-default\" onclick=\"request('saveBajaAdm&&id_ad=$id_ad','todo')\" type=\"button\">  Aceptar  </button></th><th><button class=\"btn btn-default\" onclick=\"request('consulAdm','todo')\" type=\"button\">  cancelar </button></th></tr>";
 			echo "</table></div></div>";
 
 		}
@@ -687,7 +687,6 @@
 			{
 				echo "Error inesperado";
 			}
-			header("Refresh: 6;index.php");
 			?></div><?php
 		}
 		
@@ -706,7 +705,7 @@
 				?>
 				<div class="alert alert-danger" role="alert">
 				<h3>No hay pedidos pendientes.</h3><br/>
-				<a class="btn btn-default" href=index.php role="button">Regresar</a>
+				<button class="btn btn-default" onclick="request('','todo')" type="button">Regresar</button>
 				</div>
 				<?php
 			}
@@ -730,7 +729,7 @@
 					{
 						echo "<td>".$nombres[$i]["p_fuerte"]."</td>";
 					}
-					echo "<td>".$pedidos[$i]["fecha_hora"]."</td><td>".$pedidos[$i]["status"]."</td><td>".$pedidos[$i]["descripcion"]."</td><td><a class=\"btn btn-success\" href=\"index.php?op=cEsteNotif&&id_pe=$id_pe&&msj=2\" role=\"button\">Listo</a></td></tr>";
+					echo "<td>".$pedidos[$i]["fecha_hora"]."</td><td>".$pedidos[$i]["status"]."</td><td>".$pedidos[$i]["descripcion"]."</td><td><button class=\"btn btn-success\" onclick=\"request('cEsteNotif&&id_pe=$id_pe&&msj=2','todo')\" role=\"button\">Listo</button></td></tr>";
 				}
 				echo "</table>";
 				echo "</div></div>";
@@ -1139,7 +1138,7 @@
 				?>
 				<div class="alert alert-danger" role="alert">
 				<h3>No tienes pedidos pendientes.</h3><br/>
-				<a class="btn btn-default" href=index.php role="button">Regresar</a>
+				<button class="btn btn-default" onclick="request('','')" type="button">Regresar</button>
 				</div>
 				<?php
 			}
@@ -1247,7 +1246,7 @@
 				?>
 				<div class="alert alert-danger" role="alert">
 				<h3>No tienes notificaciones disponibles.<h3><br/>
-				<a class="btn btn-default" href=index.php role="button">Regresar</a>
+				<button class="btn btn-default" onclick="request('','todo')" type="button">Regresar</button>
 				</div>
 				<?php
 			}

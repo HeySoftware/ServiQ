@@ -37,15 +37,16 @@
 		public function navBar()
 		{
 			//Modificacion Anairene.- Gestionar Admins
-			$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
 			if(isset($_SESSION["adm"]))
 			{
+				$categorias = $this->myDao->consultaTabla("*","categoria");
 				$admin = $_SESSION["user"];
 				$sudo = $this->myDao->consultaTabla("sudo_su","administrador","usuario='".$admin."'");
 				$this->myGui->navBar($categorias,"","",$sudo[0]["sudo_su"]);
 			}
 			else
 			{
+				$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
 				$id_cl = $this->getIdUser();
 				$carrito = $this->myDao->consultaTabla("*","carrito","id_cl = $id_cl");
 				$bandeja = $this->myDao->consultaTabla("*","notificacion","id_cl = $id_cl and estado = 0");
@@ -263,6 +264,7 @@
 		 {
 			$id_pe = $_GET["id_pe"];
 			$this->myDao->updateData("pedido","id_pe = $id_pe", "status = 'LISTO'");
+			$this->verPedidos();
 		 }
 		/**
           * Envia la notificacion de que el pedido ya está listo al cliente.
@@ -1080,20 +1082,35 @@
 					if($error == 1)
 					{
 						// si asi fue, mandamos mensaje de exito.
-						$this->myGui->mensaje(5);
+						//$this->myGui->mensaje(5);
+						?>
+							<script>
+								request('msj&&no=5','todo');
+							</script>
+						<?php
 					}
 					else
 					{
 						//En caso contrario, mandamos mensaje de error.
-						$this->myGui->error(613);
-						header("Refresh: 3;index.php?op=consulAdm");
+						//$this->myGui->error(613);
+						?>
+							<script>
+								request('err&&no=613','todo');
+							</script>
+						<?php
+						//header("Refresh: 3;index.php?op=consulAdm");
 					}
 				}
 				else
 				{
 					// En caso de encontrar usuarios o correos iguales, mandamos mensaje de error.
-					$this->myGui->error(614);
-					header("Refresh: 3;index.php?op=anadirAdm");
+					//$this->myGui->error(614);
+					?>
+						<script>
+							request('err&&no=614','todo');
+						</script>
+					<?php
+					//header("Refresh: 3;index.php?op=anadirAdm");
 				}
 			}
 		}
@@ -1164,21 +1181,36 @@
 					if($error == 1)
 					{
 						//Si no fue asi, se manda mensaje de actualizacion exitosa.
-						$this->myGui->mensaje(6);
-						header("Refresh: 3;index.php?op=consulAdm");
+						//$this->myGui->mensaje(6);
+						?>
+							<script>
+								request('msj&&no=6','todo');
+							</script>
+						<?php
+						//header("Refresh: 3;index.php?op=consulAdm");
 					}
 					else
 					{
 						//En caso contrario, se manda mensaje de error.
-						$this->myGui->error(616);
-						header("Refresh: 3;index.php?op=consulAdm");
+						//$this->myGui->error(616);
+						?>
+							<script>
+								request('err&&no=616','todo');
+							</script>
+						<?php
+						//header("Refresh: 3;index.php?op=consulAdm");
 					}
 				}
 				else
 				{
 					//En caso de que se este actualizando un correo repetido, se mandara un mensaje de error.
-					$this->myGui->error(615);
-					header("Refresh: 3;index.php?op=modifAdm&&$id_ad");
+					//$this->myGui->error(615);
+					?>
+						<script>
+							request('err&&no=615','todo');
+						</script>
+					<?php
+					//header("Refresh: 3;index.php?op=modifAdm&&$id_ad");
 				}
 			}
 			
@@ -1209,13 +1241,23 @@
 
 			if($error == 1)
 			{
-				$this->myGui->mensaje(7);
-				header("Refresh: 3;index.php?op=consulAdm");
+				//$this->myGui->mensaje(7);
+				?>
+					<script>
+						request('msj&&no=7','todo');
+					</script>
+				<?php
+				//header("Refresh: 3;index.php?op=consulAdm");
 			}
 			else
 			{
-				$this->myGui->error(617);
-				header("Refresh: 3;index.php?op=consulAdm");
+				//$this->myGui->error(617);
+				?>
+					<script>
+						request('err&&no=617','todo');
+					</script>
+				<?php
+				//header("Refresh: 3;index.php?op=consulAdm");
 			}
 		}
 		
@@ -1248,13 +1290,19 @@
 			$infoUsu = $this->myDao->consultaTabla("*","cliente",$condicion); //Saca la informacion del usuario.
 			if ($cantidadCB == "")
 			{
-				$this->myGui->error(90);
-				header("Refresh: 3;index.php?op=recarga");
+				?>
+					<script>
+						request('err&&no=90','todo');
+					</script>
+				<?php
 			}
 			elseif (count($infoUsu) == 0) // revisa que el usuario exista.
 			{
-				$this->myGui->error(619);
-				header("Refresh: 3;index.php?op=recarga");
+				?>
+					<script>
+						request('err&&no=619','todo');
+					</script>
+				<?php
 			}
 			else
 			{
@@ -1263,8 +1311,11 @@
 				$condicion2 = "correo = '$correo'";
 				$set = "saldo = $total";
 				$this->myDao->updateData("cliente",$condicion,$set);
-				$this->myGui->mensaje(646);
-				header("Refresh: 3;index.php?op=recarga");
+				?>
+					<script>
+						request('msj&&no=646','todo');
+					</script>
+				<?php
 			}
 			
 
@@ -1512,6 +1563,11 @@
 			$this->myGui->mensaje($numero);
 		}
 
+		public function error()
+		{
+			$numero = $_GET["no"];
+			$this->myGui->error($numero);
+		}
 		//Calcula el total a pagar de los platillos que se encuentran en el carrito.
 		public function calcularTotal()
 		{
@@ -1537,6 +1593,7 @@
 			}
 			return $total;
 		}
+
 
 		public function doGet($op)
 		{
@@ -1878,6 +1935,10 @@
 
 				case "msj":
 					$this->mensaje();
+					break;
+
+				case "err":
+					$this->error();
 					break;
 			}
 		}
