@@ -230,7 +230,7 @@
 		public function verPedidos()
 		{
 			$columna = "id_pe,id_cl,id_pl,id_cd,fecha_hora,status,descripcion";
-			$condicion = "status = 'PENDIENTE'";
+			$condicion = "status = 'PENDIENTE' or status = 'LISTO'";
 			$pedidos = $this->myDao->consultaTabla($columna,"pedido",$condicion);
 			$nombres = array();
 			$clientes = array();
@@ -262,9 +262,16 @@
           */
 		public function cambiarEstado()
 		 {
-			$id_pe = $_GET["id_pe"];
-			$this->myDao->updateData("pedido","id_pe = $id_pe", "status = 'LISTO'");
-			$this->verPedidos();
+		 	$id_pe = $_GET["id_pe"];
+		 	$estado = $_GET["est"];
+		 	$status = "status = 'LISTO'";
+		 	if($estado == 1)
+		 	{
+		 		$status = "status = 'ENTREGADO'";
+		 	}
+		 	echo $status;
+			$this->myDao->updateData("pedido","id_pe = $id_pe", $status);
+
 		 }
 		/**
           * Envia la notificacion de que el pedido ya está listo al cliente.
@@ -330,7 +337,7 @@
 			$categoria = $this->myDao->consultaTabla("*","categoria","id_ct=$id_ct");
 			$nombre_cat = $categoria[0]["categoria"];
 			$platillos = $this->myDao->consultaTabla("*","platillo","id_ct = $id_ct");
-			$this->myGui->verMenu($nombre_cat,$platillos,$saldo2);
+			$this->myGui->verMenu($nombre_cat,$platillos,$saldo2,$id_ct);
 
 		}
 		
@@ -620,11 +627,21 @@
 
 					// Mensaje de exito.
 					//$this->myGui->mensaje(210);
+					?>
+						<script>
+							request('msj&&no=210');
+						</script>
+					<?php
 				}
 				else
 				{
 					// Saldo insuficiente.
 					//$this->myGui->error(404);
+					?>
+						<script>
+							request('err&&no=404');
+						</script>
+					<?php
 				}	
 			}
 			// Si el platillo es de tipo comida del dia, se hace esto.
@@ -664,10 +681,20 @@
 					$n_saldo = $saldo - $precio;
 					$this->myDao->updateData("cliente","id_cl = $id_cl","saldo = $n_saldo");
 					//$this->myGui->mensaje(210);
+					?>
+						<script>
+							request('msj&&no=210');
+						</script>
+					<?php
 				}
 				else
 				{
 					//$this->myGui->error(404);
+					?>
+						<script>
+							request('err&&no=404');
+						</script>
+					<?php
 				}
 			}
 		}
@@ -840,14 +867,20 @@
 					// Aqui se elige el mensaje, si se envio o solo se guardo.
 					if(isset($_POST['boton_enviar']))
 					{
-						?><script type="text/javascript">
-							alert("Enviado");
-						</script><?php
-						header("Refresh: 4; index.php");
+						?>
+						<script>
+							request('msj&&no=4','todo');
+						</script>
+						<?php
+						header("Refresh: 5; index.php");
 					}
 					else
 					{
-						?><script type="text/javascript">alert("Guardado");</script><?php
+						?>
+						<script>
+							request('msj&&no=10','todo');
+						</script>
+						<?php
 						header("Refresh: 4; index.php");
 					}
 				}
@@ -1445,11 +1478,11 @@
 			$this->myDao->deleteData("favoritos", "id_pe=$id_pe");
 			if($_GET["l"]==1)
 			{
-				header("Location: index.php?op=vPCliente");
+				$this->verPedidosCliente();
 			}
 			else
 			{
-				header("Location: index.php?op=showFav");
+				$this->showFavorito();
 			}
 		}
 
@@ -1478,6 +1511,188 @@
 				$tipo="comida";
 			}
 			$this->agregarCarrito($id_cd_pl,$desc,$tipo);
+			$this->showFavorito();
+		}
+		
+		///AGREGAR PLATILLOS 
+		public function agregarPlatillo()
+		{
+				$id_ct=$_GET["id_ct"];
+				$categorias=$this->myDao->consultaTabla("*", "categoria");
+				$this->myGui->agregarPlatillo($categorias, $id_ct);
+		}
+
+		public function guardarPlatillo()
+		{
+			$pl=$_POST["pl"];
+			$id_ct=$_GET["id_ct"];
+			
+			if($pl["platillo"] == "")
+			{
+				$this->myGui->error(731);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			elseif($pl["id_ct"] == "")
+			{
+				$this->myGui->error(737);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			elseif($pl["precio"] == "")
+			{
+				$this->myGui->error(732);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+			
+			elseif($pl["duracion"] == "")
+			{
+				$this->myGui->error(734);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			
+			elseif($pl["ingrediente"] == "")
+			{
+				$this->myGui->error(735);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			elseif($pl["imagen"] == "")
+			{
+				$this->myGui->error(736);
+				header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+			}
+
+			else
+			{
+				$platillo=$pl["platillo"];
+				//Verificamos que no haya platillos iguales.
+				$plRepetido = $this->myDao->consultaTabla("*","platillo","platillo='$platillo'");
+				//echo $plRepetido[0]["platillo"];
+				if(count($plRepetido)== 0)
+				{
+					//En caso de que no suceda, mandamos al dao a que inserte el nuevo registro.
+					//,'".$pl["status"]."',
+					$columnas = "id_ct,platillo,precio,status,duracion,ingrediente,imagen";
+					$valores = "'".$pl["id_ct"]."','".$pl["platillo"]."','".$pl["precio"]."','0','".$pl["duracion"]."','".$pl["ingrediente"]."','".$pl["imagen"]."'";
+					$error = $this->myDao->insertarEnTabla("platillo", $columnas, $valores);
+					//Verificamos si se realizo la insercion con exito
+					if($error == 1)
+					{
+						// si asi fue, mandamos mensaje de exito.
+						$this->myGui->mensaje(20);
+					}
+					else
+					{
+						//En caso contrario, mandamos mensaje de error.
+						$this->myGui->error(613);
+						header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+					}
+				}
+				else
+				{
+					// En caso de encontrar platillos iguales
+					$this->myGui->error(742); 
+					header("Refresh: 3;index.php?op=addPl&&id_ct=$id_ct");
+				}
+			}
+			
+
+		}
+
+		public function agregarComida()
+		{
+			$this->myGui->agregarComida();
+		}
+
+		public function guardarComida()
+		{
+			$cd=$_POST["cd"];
+			
+			if($cd["p_fuerte"] == "")
+			{
+				$this->myGui->error(738);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			elseif($cd["p_chico"] == "")
+			{
+				$this->myGui->error(739);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			elseif($cd["bebida"] == "")
+			{
+				$this->myGui->error(740);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+			elseif($cd["precio"] == "")
+			{
+				$this->myGui->error(733);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+			
+			elseif($cd["ingredientes"] == "")
+			{
+				$this->myGui->error(734);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			
+			elseif($cd["p_entrada"] == "")
+			{
+				$this->myGui->error(741);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+
+			elseif($cd["duracion"] == "")
+			{
+				$this->myGui->error(734);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			elseif($cd["imagen"] == "")
+			{
+				$this->myGui->error(736);
+				header("Refresh: 3;index.php?op=addCd");
+			}
+
+			else
+			{
+				$p_fuerte=$cd["p_fuerte"];
+				//Verificamos que no haya platillos iguales.
+				$cdRepetido = $this->myDao->consultaTabla("*","cDia","p_fuerte='$p_fuerte'");
+				//echo $plRepetido[0]["platillo"];
+				if(count($cdRepetido)== 0)
+				{
+					//En caso de que no suceda, mandamos al dao a que inserte el nuevo registro.
+					$columnas = "p_fuerte,p_chico,bebida,precio,ingredientes,p_entrada,status,duracion,imagen";
+					$valores = "'".$cd["p_fuerte"]."','".$cd["p_chico"]."','".$cd["bebida"]."','".$cd["precio"]."','".$cd["ingredientes"]."','".$cd["p_entrada"]."','0','".$cd["duracion"]."','".$cd["imagen"]."'";
+					$error = $this->myDao->insertarEnTabla("cDia", $columnas, $valores);
+					//Verificamos si se realizo la insercion con exito
+					if($error == 1)
+					{
+						// si asi fue, mandamos mensaje de exito.
+						$this->myGui->mensaje(20);
+					}
+					else
+					{
+						//En caso contrario, mandamos mensaje de error.
+						$this->myGui->error(613);
+						header("Refresh: 3;index.php?op=addCd");
+					}
+				}
+				else
+				{
+					// En caso de encontrar platillos iguales
+					$this->myGui->error(742); 
+					header("Refresh: 3;index.php?op=addCd");
+				}
+			}
+			
+
 		}
 		////FIN GABY
 		///
@@ -1676,6 +1891,28 @@
 					$msj = $_GET["msj"];
 					$this->mandarNotificacion($id_pe,0,$msj);
 					$this->cambiarEstado();
+					break;
+				
+				//Gaby-Agregar Platillos y comida al menu
+				case "addPl":
+					$this->agregarPlatillo();
+					break;
+
+				case "saveNPl":
+					$this->guardarPlatillo();
+					break;
+
+				case "addCd":
+					$this->agregarComida();
+					break;
+
+				case "saveNCd":
+					$this->guardarComida();
+					break;
+				//
+				case "cEstP":
+					$this->cambiarEstado();
+					header('Location: index.php?op=vPed');
 					break;
 				case "vBEntrada":
 					$this->verBandejaEntrada();

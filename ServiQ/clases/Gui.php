@@ -576,6 +576,12 @@
 				header("Refresh: 3;index.php?op=recarga");
 			}
 			// fin gestionar Admins
+			//Gaby_agregar platillos
+			elseif($num == 20)
+			{
+				echo "<h3>Registro exitoso.</h3>";
+				header("Refresh: 3;index.php");
+			}
 			?></div><?php
 		}
 		
@@ -683,6 +689,73 @@
 			{
 				echo "Seleccione una cantidad.";
 			}
+			///GABY _ agregar platillo
+			elseif($no==731)
+			{
+				
+				echo "Ingrese el nombre del Platillo";
+			}
+
+			elseif($no==732)
+			{
+				echo "Ingrese el precio del Platillo";
+			}
+
+			elseif($no==733)
+			{
+				echo "Ingrese el status del Platillo";
+			}
+
+			elseif($no==734)
+			{
+				echo "Ingrese la duracion del Platillo";
+			}
+
+			elseif($no==735)
+			{
+				echo "Ingrese los ingredientes del platillo";
+			}
+
+			elseif($no==736)
+			{
+				echo "Seleccione la imagen del platillo";
+			}
+
+			elseif($no==737)
+			{
+				echo "Seleccione una categoria";
+			}
+
+			//GABY_ Agregar comida del día
+			elseif($no==738)
+			{
+				echo "Seleccione un plato fuerte";
+			}
+
+			elseif($no==739)
+			{
+				echo "Seleccione un plato chico ";
+			}
+
+			elseif($no==740)
+			{
+				echo "Seleccione una bebida ";
+			}
+
+			elseif($no==740)
+			{
+				echo "Seleccione una bebida ";
+			}
+
+			elseif($no==741)
+			{
+				echo "Seleccione un plato de entrada ";
+			}
+
+			elseif($no == 742)
+			{
+				echo "Este registro ya existe, intente nuevamente.";
+			}
 			else
 			{
 				echo "Error inesperado";
@@ -715,7 +788,7 @@
 				<div class="panel panel-default">
 				<div class="table-responsive">
 				<table class="table table-hover">
-				<tr><th>PEDIDO</th><th>CLIENTE</th><th>PLATILLO</th><th>FECHA/HORA</th><th>ESTADO</th><th>DESCRIPCION</th></tr>
+				<tr><th>PEDIDO</th><th>CLIENTE</th><th>PLATILLO</th><th>FECHA/HORA</th><th>ESTADO</th><th>DESCRIPCION</th><th></th></tr>
 				<?php
 				for ($i=0;$i<$cantidad;$i++)
 				{
@@ -730,6 +803,14 @@
 						echo "<td>".$nombres[$i]["p_fuerte"]."</td>";
 					}
 					echo "<td>".$pedidos[$i]["fecha_hora"]."</td><td>".$pedidos[$i]["status"]."</td><td>".$pedidos[$i]["descripcion"]."</td><td><button class=\"btn btn-success\" onclick=\"request('cEsteNotif&&id_pe=$id_pe&&msj=2','todo')\" role=\"button\">Listo</button></td></tr>";
+					if ($pedidos[$i]["status"] == "PENDIENTE")
+					{
+						echo "<td><a class=\"btn btn-success\" href=\"index.php?op=cEsteNotif&&id_pe=$id_pe&&est=0&&msj=2\" role=\"button\">Listo</a></td></tr>";
+					}
+					else
+					{
+						echo "<td><a class=\"btn btn-primary\" href=\"index.php?op=cEstP&&id_pe=$id_pe&&est=1\" role=\"button\">Entregar</a></td></tr>";
+					}
 				}
 				echo "</table>";
 				echo "</div></div>";
@@ -765,9 +846,16 @@
 			
 				<div class= "row">
 				<div class= "col-md-12">
+					<div class="col-md-offset-4 col-md-4">
 					<?php
 						echo "<h2>$nombre_cat</h2>";
 					?>
+					</div>
+					<div class="col-md-offset-2 col-md-2">
+					<?php
+						echo "<button class=\"btn btn-primary glyphicon glyphicon-plus\" onclick=\"request('addPl&&id_ct=$id_ct','todo')\" type=\"button\"></button>";
+					?>
+					</div>
 				</div>
 				</div>
 				
@@ -792,7 +880,7 @@
 				$status = $platillos[$i]["status"];
 
 				?>
-				<div class="panel panle-default">
+				<div class="panel panel-default col-md-12">
 				<div class="panel-heading"><h3><?php echo $nombre; ?></h3></div>
 				<div class="panel-body">
 				<div class="row"> 
@@ -981,14 +1069,17 @@
 			<div class="panel panel-default col-md-12">
 				<div class="panel-body">
 				<div class= "row">
-				<div class= "col-md-offset-4 col-md-4" style="text-align:center;">
-					<?php
-						echo "<h2>Comida Del Dia</h2>";
-					?>
-				</div>
-					<div class= "col-md-4"  style="text-align:right;"><h3><FONT FACE="VERDANA" SIZE=4 style="color:#5bc0de;">Saldo: $<?php echo $saldo2; ?></FONT>
-					</h3></div>
+				<div class="col-md-12">
+					<div class= "col-md-offset-4 col-md-4" style="text-align:center;">
+						<?php
+							echo "<h2>Comida Del Dia</h2>";
+						?>
 					</div>
+					<div class= "col-md-4"  style="text-align:right;"><h3><FONT FACE="VERDANA" SIZE=4 style="color:#5bc0de;">Saldo: $<?php echo $saldo2; ?></FONT>
+					</h3>
+					</div>
+				</div>
+				</div>
 				</div>
 			</div>
 
@@ -1001,9 +1092,16 @@
 				<div class="panel-body">
 				<div class= "row">
 				<div class= "col-md-12">
+					<div class="col-md-offset-4 col-md-4">
 					<?php
 						echo "<h2>Comida Del Dia</h2>";
 					?>
+					</div>
+					<div class="col-md-offset-2 col-md-2">
+					<?php
+						echo "<button class=\"btn btn-primary glyphicon glyphicon-plus\" onclick=\"request('addCd','todo')\" type=\"button\"></button>";
+					?>
+					</div>
 				</div>
 				</div>
 				</div>
@@ -1030,7 +1128,7 @@
 				$status = $cDia[$i]["status"];
 
 				?>
-				<div class="panel panle-default">
+				<div class="panel panel-default col-md-12">
 				<div class="panel-heading"><h3><?php echo $p_fuerte; ?></h3></div>
 				<div class="panel-body">
 
@@ -1201,11 +1299,11 @@
 						
 						if($z==1)  //==true
 						{
-							echo "<td><a class=\"btn btn-primary glyphicon glyphicon-star\" href=\"index.php?op=delFav&&id_pe=$id_pe&&l=1\" role=\"button\" Title=\"Quitar favorito\"></a></td>";
+							echo "<td><button class=\"btn btn-primary glyphicon glyphicon-star\" onclick=\"request('delFav&&id_pe=$id_pe&&l=1','todo')\" type=\"button\" Title=\"Quitar favorito\"></button></td>";
 						}
 						else
 						{
-							echo "<td><a class=\" btn btn-default glyphicon glyphicon-star-empty\" href=\"index.php?op=addFav&&id_pe=$id_pe\" role=\"button\" Title=\"Agregar favorito\"></a></td>"; 
+							echo "<td><button class=\" btn btn-default glyphicon glyphicon-star-empty\" onclick=\"request('addFav&&id_pe=$id_pe','todo')\" type=\"button\" Title=\"Agregar favorito\"></button></td>"; 
 						}
 						/////
 						echo "<td></td></tr>";
@@ -1605,14 +1703,34 @@
 				    echo "<tr><td>".$favoritos[$i]["id_pe"]."</td><td>".$platillo."</td><td>".$descrip."</td>";
 
 				    $id_pe=$favoritos[$i]["id_pe"];
-				    echo "<td><a class=\"btn btn-primary btn glyphicon glyphicon-star\" href=\"index.php?op=delFav&&id_pe=$id_pe&&id_cl=$id_cl\" Title=\"Quitar favorito\"></a></td>";
+				    echo "<td><button class=\"btn btn-primary btn glyphicon glyphicon-star\" onclick=\"request('delFav&&id_pe=$id_pe&&id_cl=$id_cl','todo')\" Title=\"Quitar favorito\"></button></td>";
 
-				    echo "<td><button class=\"btn btn-success \" href=index.php?op=pFav&&id_pe=$id_pe role=\"button\">Agregar a Carrito</a></td></tr>";  
+				    echo "<td><button class=\"btn btn-success \" onclick=\"request('pFav&&id_pe=$id_pe','todo')\" type=\"button\" data-toggle=\"modal\" data-target=\"#aCar2\">Agregar a Carrito</button></td></tr>";  
 
 				}
 				echo "</table>";
 				echo "</div></div>";
 			}
+			?>
+			<div class="modal fade" id="aCar2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Has Agregado al Carrito</h4>
+				      </div>
+				      <div class="modal-body">
+				        Puedes ver tu carrito en la pesta&ntilde;a Ver/Carrito.
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        <button type="button" class="btn btn-success" data-dismiss="modal"onclick="request('vCar','todo')">Ver Carrito</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
+			<?php
 
 		}
 		/// FIN GABY ///
@@ -1671,5 +1789,181 @@
     		}
     		echo "</div>";
 		}
+		
+		/**
+         * Muestra un formulario en el cual se ingresará la info. del platillo
+         *	@param $categorias	contiene todas las categorias disponibles, para mostrarlas en el dropbox
+         *  @param $id_ct se requiere para poder redireccionar hacia el menu, ya que está dividido en categorías
+         */
+		public function agregarPlatillo($categorias, $id_ct)
+		{
+			?>
+			<div class="container">
+				<div class="panel panel-default col-lg-8 col-lg-offset-2">
+					<div class="panel-title text-center"><h3>Nuevo Platillo</h3></div>
+					<div class ="panel-body">
+						<form action="index.php?op=saveNPl&&id_ct=$id_ct" method="POST" class="form-horizontal">
+						
+							<div class="form-group">
+								<label  class="col-sm-2 control-label">Nombre del platillo</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="pl[platillo]" placeholder="">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label  class="col-sm-2 control-label">Categoria</label>
+								<select name="pl[id_ct]">
+								<?php
+								$n = count($categorias);
+									for($i=0;$i<$n;$i++)
+									{
+										$categoria = $categorias[$i]["id_ct"];
+										$nombre = $categorias[$i]["categoria"];
+										echo"<option value=$categoria> $nombre $categoria </option>";
+									}
+								?>
+								</select>
+								
+
+
+							</div>
+							
+							<div class="form-group">
+								<label  class="col-sm-2 control-label">Precio</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="pl[precio]" placeholder="">
+								</div>
+							</div>
+                            
+                            
+                            <div class="form-group">
+								<label  class="col-sm-2 control-label">Duraci&oacute;n</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="pl[duracion]" placeholder="">
+								</div>
+							</div>
+
+                            <div class="row">
+								<label class="col-sm-2 control-label">Ingredientes</label>
+								<div class="col-sm-8">
+									<p><textarea class="form-control" rows="3" name="pl[ingrediente]"></textarea></p>
+								</div>
+							</div>
+
+                            
+                            <div class="form-group">
+								<label  class="col-sm-2 control-label">Imagen</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="pl[imagen]" placeholder="">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-xs-8">
+									<button type="submit" class="btn btn-success">Agregar</button>
+									<!--<a class="btn btn-default" href=index.php?op=vMenu&&id_ct=$id_ct role="button">Regresar</a>-->
+
+									<a class="btn btn-default" href=index.php role="button">Regresar</a>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+
+
+		/**
+         * Muestra un formulario en el cual se ingresará la info. de la comida del día
+         */
+		public function agregarComida()
+		{
+			?>
+			<div class="container">
+				<div class="panel panel-default col-lg-8 col-lg-offset-2">
+					<div class="panel-title text-center"><h3>Nueva Comida del D&iacute;a</h3></div>
+					<div class ="panel-body">
+						<form action="index.php?op=saveNCd" method="POST" class="form-horizontal">
+						
+							<div class="form-group">
+								<label  class="col-sm-2 control-label">Plato fuerte</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="cd[p_fuerte]" placeholder="">
+								</div>
+							</div>
+
+							
+							<div class="form-group">
+								<label  class="col-sm-2 control-label">Plato chico</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="cd[p_chico]" placeholder="">
+								</div>
+							</div>
+                            
+                            <div class="form-group">
+								<label  class="col-sm-2 control-label">Bebida</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="cd[bebida]" placeholder="">
+								</div>
+							</div>
+                            
+                            <div class="form-group">
+								<label  class="col-sm-2 control-label">Precio</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="cd[precio]" placeholder="">
+								</div>
+							</div>
+
+                            <div class="row">
+								<label class="col-sm-2 control-label">Ingredientes</label>
+								<div class="col-sm-8">
+									<p><textarea class="form-control" rows="3" name="cd[ingredientes]"></textarea></p>
+								</div>
+							</div>
+
+                            
+                            <div class="form-group">
+								<label  class="col-sm-2 control-label">Entrada</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="cd[p_entrada]" placeholder="">
+								</div>
+							</div>
+
+							
+							<div class="form-group">
+								<label  class="col-sm-2 control-label">Duraci&oacute;n</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="cd[duracion]" placeholder="">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label  class="col-sm-2 control-label">Imagen</label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" name="cd[imagen]" placeholder="">
+								</div>
+							</div>
+
+
+
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-xs-8">
+									<button type="submit" class="btn btn-success">Agregar</button>
+									<!--<a class="btn btn-default" href=index.php?op=vMenu&&id_ct=$id_ct role="button">Regresar</a>-->
+
+									<a class="btn btn-default" href=index.php role="button">Regresar</a>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+		/// FIN GABY ///
 	}
 ?>
