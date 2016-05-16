@@ -37,9 +37,15 @@
 		public function navBar()
 		{
 			//Modificacion Anairene.- Gestionar Admins
+<<<<<<< HEAD
 			if(isset($_SESSION["adm"]))
 			{
 				$categorias = $this->myDao->consultaTabla("*","categoria");
+=======
+			$categorias = $this->myDao->consultaTabla("*","platillo p,categoria c","p.id_ct = c.id_ct and status=1 group by categoria");
+			if(isset($_SESSION["adm"]))
+			{
+>>>>>>> refs/remotes/origin/master
 				$admin = $_SESSION["user"];
 				$sudo = $this->myDao->consultaTabla("sudo_su","administrador","usuario='".$admin."'");
 				$this->myGui->navBar($categorias,"","",$sudo[0]["sudo_su"]);
@@ -627,21 +633,27 @@
 
 					// Mensaje de exito.
 					//$this->myGui->mensaje(210);
+<<<<<<< HEAD
 					?>
 						<script>
 							request('msj&&no=210');
 						</script>
 					<?php
+=======
+>>>>>>> refs/remotes/origin/master
 				}
 				else
 				{
 					// Saldo insuficiente.
 					//$this->myGui->error(404);
+<<<<<<< HEAD
 					?>
 						<script>
 							request('err&&no=404');
 						</script>
 					<?php
+=======
+>>>>>>> refs/remotes/origin/master
 				}	
 			}
 			// Si el platillo es de tipo comida del dia, se hace esto.
@@ -681,20 +693,26 @@
 					$n_saldo = $saldo - $precio;
 					$this->myDao->updateData("cliente","id_cl = $id_cl","saldo = $n_saldo");
 					//$this->myGui->mensaje(210);
+<<<<<<< HEAD
 					?>
 						<script>
 							request('msj&&no=210');
 						</script>
 					<?php
+=======
+>>>>>>> refs/remotes/origin/master
 				}
 				else
 				{
 					//$this->myGui->error(404);
+<<<<<<< HEAD
 					?>
 						<script>
 							request('err&&no=404');
 						</script>
 					<?php
+=======
+>>>>>>> refs/remotes/origin/master
 				}
 			}
 		}
@@ -979,7 +997,11 @@
 					$this->myDao->updateData("carrito","id_car = $id_car","cantidad = $cantidad");
 				}
 			}
+<<<<<<< HEAD
 			$this->verCarrito();
+=======
+			$this->myGui->modificarCantidad($cantidad,$saldo,$precio,$id_car);
+>>>>>>> refs/remotes/origin/master
 		}
 		/*
 		* Lo mismo que aumentarCantidad solo que se resta en 1.
@@ -1022,7 +1044,11 @@
 					$this->myDao->updateData("carrito","id_car = $id_car","cantidad = $cantidad");
 				}
 			}
+<<<<<<< HEAD
 			$this->verCarrito();
+=======
+			$this->myGui->modificarCantidad($cantidad,$saldo,$precio,$id_car);
+>>>>>>> refs/remotes/origin/master
 		}
 
 		/* 
@@ -1770,12 +1796,15 @@
 			$this->myDao->deleteData("carrito", "id_car=".$idCarrito);
 
 			$this->verCarrito();
+<<<<<<< HEAD
 		}
 
 		public function mensaje()
 		{
 			$numero = $_GET["no"];
 			$this->myGui->mensaje($numero);
+=======
+>>>>>>> refs/remotes/origin/master
 		}
 
 		public function error()

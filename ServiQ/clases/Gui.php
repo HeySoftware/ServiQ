@@ -28,7 +28,11 @@
             	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 	<ul class="nav navbar-nav">                 	
                     	<li>
+<<<<<<< HEAD
                     		<a href="#" onclick="request('','todo')">Comida del Dia</a>
+=======
+                    		<a href="#" onclick="request('')">Comida del Dia</a>
+>>>>>>> refs/remotes/origin/master
                         	<!--<a href="index.php">Comida del dia</a>-->
                     	</li>
                     	<?php
@@ -46,7 +50,11 @@
 										{
 											$categoria = $categorias[$i]["id_ct"];
 											$nombre = $categorias[$i]["categoria"];
+<<<<<<< HEAD
 											echo "<li><a href=\"#\" onclick=\"request('vMenu&&id_ct=$categoria','todo')\">$nombre</a></li>";
+=======
+											echo "<li><a href=\"#\" onclick=\"request('vMenu&&id_ct=$categoria')\">$nombre</a></li>";
+>>>>>>> refs/remotes/origin/master
 										}
 									?>
 								</ul>
@@ -64,6 +72,7 @@
 											//Anairene.- Gestionar Admins
 											if($validarSudo==1)
 											{
+<<<<<<< HEAD
                     							echo "<a href=\"#\" onclick=\"request('consulAdm','todo')\">Admins</a>";
 												// Moxis
                     							echo "<a href=\"#\" onclick=\"request('recarga','todo')\">Recarga</a>";
@@ -71,13 +80,28 @@
 											}
 											//Fin Anairene.- Gestionar Admins
 			                    			echo "<a href=\"#\" onclick=\"request('vPed','todo')\">Pedidos</a>";
+=======
+                    							echo "<a href=\"#\" onclick=\"request('consulAdm')\">Admins</a>";
+												// Moxis
+                    							echo "<a href=\"#\" onclick=\"request('recarga')\">Recarga</a>";
+                    							//Moxis
+											}
+											//Fin Anairene.- Gestionar Admins
+			                    			echo "<a href=\"#\" onclick=\"request('vPed')\">Pedidos</a>";
+>>>>>>> refs/remotes/origin/master
 			                    		}
 										else
 										{
 			                    			?>
+<<<<<<< HEAD
 			                    			<a href="#" onclick="request('vPCliente','todo')">Mis Pedidos</a>
 			                    			<a href="#" onclick="request('showFav','todo')">Mis Favoritos</a>
 			                    			<a href="#" onclick="request('vBEntrada','todo')">Correo <span class="badge badge-success"><?php echo $bandeja;?></span></a>
+=======
+			                    			<a href="#" onclick="request('vPCliente')">Mis Pedidos</a>
+			                    			<a href="#" onclick="request('showFav')">Mis Favoritos</a>
+			                    			<a href="#" onclick="request('vBEntrada')">Correo <span class="badge badge-success"><?php echo $bandeja;?></span></a>
+>>>>>>> refs/remotes/origin/master
 			                    			<?php
 			                    		}
 			                    	?>
@@ -87,7 +111,11 @@
 									{
 										?>
 										<li>
+<<<<<<< HEAD
 											<a href="#" onclick="request('vCar','todo')">Carrito <span class="badge"><?php echo $carrito; ?></span></a>
+=======
+											<a href="#" onclick="request('vCar')">Carrito <span class="badge"><?php echo $carrito; ?></span></a>
+>>>>>>> refs/remotes/origin/master
 										</li>
 										<?php
 									}
@@ -439,7 +467,11 @@
 			echo "<div class=\"table-responsive\">";
 			echo "<table class=\"table table-hover\">";
 				echo "<tr><th colspan='4' >¿Seguro(a) que desea dar de baja a $nombre ?</th></tr>";
+<<<<<<< HEAD
 				echo "<tr><th> </th><th> </th><th><button class=\"btn btn-default\" onclick=\"request('saveBajaAdm&&id_ad=$id_ad','todo')\" type=\"button\">  Aceptar  </button></th><th><button class=\"btn btn-default\" onclick=\"request('consulAdm','todo')\" type=\"button\">  cancelar </button></th></tr>";
+=======
+				echo "<tr><th> </th><th> </th><th><a class=\"btn btn-default\" href=\"index.php?op=saveBajaAdm&&id_ad=$id_ad\" role=\"button\">  Aceptar  </a></th><th><a class=\"btn btn-default\" href=\"index.php?op=consulAdm\" role=\"button\">  cancelar </a></th></tr>";
+>>>>>>> refs/remotes/origin/master
 			echo "</table></div></div>";
 
 		}
@@ -922,7 +954,11 @@
 	                    	}
 	                    	else
 	                    	{
+<<<<<<< HEAD
 	                    		echo "<button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#aCar\" onclick=\"requestNoDiv('aCar&&id_pl=$id_pl')\">Agregar a Carrito</button>";
+=======
+	                    		echo "<button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#aCar\" onclick=\"agregarCarrito('id_pl=$id_pl')\">Agregar a Carrito</button>";
+>>>>>>> refs/remotes/origin/master
 	                    	}
 	                    ?>
 	                </div> 
@@ -942,7 +978,10 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<<<<<<< HEAD
 				        <button type="button" class="btn btn-success" data-dismiss="modal"onclick="request('vCar','todo')">Ver Carrito</button>
+=======
+>>>>>>> refs/remotes/origin/master
 				      </div>
 				    </div>
 				  </div>
@@ -1191,7 +1230,11 @@
 	                    	}
 	                    	else
 	                    	{
+<<<<<<< HEAD
 	                    		echo "<button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#aCar\" onclick=\"requestNoDiv('aCar&&id_cd=$id_cd')\">Agregar a Carrito</button>";
+=======
+	                    		echo "<button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#aCar\" onclick=\"agregarCarrito('id_cd=$id_cd')\">Agregar a Carrito</button>";
+>>>>>>> refs/remotes/origin/master
 	                    	}
 	                    ?>
 	                </div> 
@@ -1211,7 +1254,10 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<<<<<<< HEAD
 				        <button type="button" class="btn btn-success" data-dismiss="modal"onclick="request('vCar','todo')">Ver Carrito</button>
+=======
+>>>>>>> refs/remotes/origin/master
 				      </div>
 				    </div>
 				  </div>
@@ -1532,7 +1578,11 @@
 					</h3>
 					<!-- Eliminar del Carrito -->
 					<?php
+<<<<<<< HEAD
 					echo "<button type=\"button\" onclick=\"request('eliminarCarrito&&id_car=$id_car','todo')\" class=\"btn btn-secondary pull-right\" style=\"color:black\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>";
+=======
+					echo "<button type=\"button\" onclick=\"eliminarCarrito('id_car=$id_car')\" class=\"btn btn-secondary pull-right\" style=\"color:black\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>";
+>>>>>>> refs/remotes/origin/master
 					?>
 	    			<div class="clearfix"></div>
 
@@ -1587,10 +1637,17 @@
 
 								<label class="col-sm-2 control-label">Cantidad</label>
 
+<<<<<<< HEAD
 								<div class="col-sm-4"><p>
 								<?php
 									$this->modificarCantidad($cantidad,$saldo,$precio,$id_car);
 								?></p>
+=======
+								<div class="col-sm-4">
+								<?php
+									$this->modificarCantidad($cantidad,$saldo,$precio,$id_car);
+								?>
+>>>>>>> refs/remotes/origin/master
 								</div>
 							</div>
 					</div>
@@ -1705,7 +1762,11 @@
 				    $id_pe=$favoritos[$i]["id_pe"];
 				    echo "<td><button class=\"btn btn-primary btn glyphicon glyphicon-star\" onclick=\"request('delFav&&id_pe=$id_pe&&id_cl=$id_cl','todo')\" Title=\"Quitar favorito\"></button></td>";
 
+<<<<<<< HEAD
 				    echo "<td><button class=\"btn btn-success \" onclick=\"request('pFav&&id_pe=$id_pe','todo')\" type=\"button\" data-toggle=\"modal\" data-target=\"#aCar2\">Agregar a Carrito</button></td></tr>";  
+=======
+				    echo "<td><button class=\"btn btn-success \" href=index.php?op=pFav&&id_pe=$id_pe role=\"button\">Agregar a Carrito</a></td></tr>";  
+>>>>>>> refs/remotes/origin/master
 
 				}
 				echo "</table>";
@@ -1738,30 +1799,48 @@
 
 		public function modificarCantidad($cantidad,$saldo,$precio,$id_car)
 		{ 
+<<<<<<< HEAD
+=======
+			$id = "cantidad".$id_car;
+			echo "<p id=\"$id\">";
+>>>>>>> refs/remotes/origin/master
 			if($cantidad == 1)
 			{
 				echo "<button type=\"button\" class=\"btn btn-success disabled\"> - </button> ";
 			}
 			else
 			{
+<<<<<<< HEAD
 				echo "<button type=\"button\" onclick=\"request('dCan&&id_car=$id_car','todo')\" class=\"btn btn-success\"> - </button>";
+=======
+				echo "<button type=\"button\" onclick=\"cantidad('dCan&&id_car=$id_car','$id_car')\" class=\"btn btn-success\"> - </button>";
+>>>>>>> refs/remotes/origin/master
 			}
 			echo " $cantidad ";
 			if($saldo >= $precio)
 			{
+<<<<<<< HEAD
 			echo " <button type=\"button\" onclick=\"request('aCan&&id_car=$id_car','todo')\" class=\"btn btn-success\"> + </button>";
+=======
+			echo " <button type=\"button\" onclick=\"cantidad('aCan&&id_car=$id_car','$id_car')\" class=\"btn btn-success\"> + </button>";
+>>>>>>> refs/remotes/origin/master
 			}
 			else
 			{
 				echo " <button type=\"button\" class=\"btn btn-success disabled\"> + </button>";
 			}
+<<<<<<< HEAD
 			?><?php
+=======
+			?></p><?php
+>>>>>>> refs/remotes/origin/master
 		}
 
 		public function activarDesactivarPlatillo($id_pl,$status)
 		{
 			$id_activar = "activar".$id_pl;
     		echo "<div id=\"$id_activar\">";
+<<<<<<< HEAD
     		echo "<button class=\"btn btn-primary\" onclick=\"request('mPl&&id_pl=$id_pl','todo')\">Modificar</button>";
     		if($status == 1)
     		{
@@ -1770,6 +1849,16 @@
     		else
     		{
     			echo "<button class=\"btn btn-danger\" onclick=\"request('activarPl&&id_pl=$id_pl','$id_activar')\">Desactivado</button>";
+=======
+    		echo "<button class=\"btn btn-primary\" onclick=\"request('mPl&&id_pl=$id_pl')\">Modificar</button>";
+    		if($status == 1)
+    		{
+    			echo "<button class=\"btn btn-success\" onclick=\"activarDesactivar('desactivarPl&&id_pl=$id_pl','$id_activar')\">Activado</button>";
+    		}
+    		else
+    		{
+    			echo "<button class=\"btn btn-danger\" onclick=\"activarDesactivar('activarPl&&id_pl=$id_pl','$id_activar')\">Desactivado</button>";
+>>>>>>> refs/remotes/origin/master
     		}
     		echo "</div>";
 		}
@@ -1778,6 +1867,7 @@
 		{
 			$id_activar = "activar".$id_cd;
     		echo "<div id=\"$id_activar\">";
+<<<<<<< HEAD
     		echo "<button class=\"btn btn-primary\" onclick=\"request('mPl&&id_cd=$id_cd','todo')\">Modificar</button>";
     		if($status == 1)
     		{
@@ -1965,5 +2055,18 @@
 			<?php
 		}
 		/// FIN GABY ///
+=======
+    		echo "<button class=\"btn btn-primary\" onclick=\"request('mPl&&id_cd=$id_cd')\">Modificar</button>";
+    		if($status == 1)
+    		{
+    			echo "<button class=\"btn btn-success\" onclick=\"activarDesactivar('desactivarPl&&id_cd=$id_cd','$id_activar')\">Activado</button>";
+    		}
+    		else
+    		{
+    			echo "<button class=\"btn btn-danger\" onclick=\"activarDesactivar('activarPl&&id_cd=$id_cd','$id_activar')\">Desactivado</button>";
+    		}
+    		echo "</div>";
+		}
+>>>>>>> refs/remotes/origin/master
 	}
 ?>
