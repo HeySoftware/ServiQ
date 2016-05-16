@@ -35,6 +35,7 @@ ob_start();
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/scripts.js"></script>
     
 	<div class="brand">ServiQ</div>
     <div class="address-bar">UABC SAUZAL</div>
@@ -49,27 +50,38 @@ ob_start();
 			
 			//Se crea una instancia del administrador.
 			$objAdm= new Adm();
+			session_start();
 			//La operacion por default esta vacia.
-			$op="";          
+			if(isset($_GET["op"]))
+			{
+				$op = $_GET["op"];
+				$objAdm->doGet($op);
+			}
+			if(isset($_POST["op"]))
+			{
+				$op = $_POST["op"];
+				$objAdm->doGet($op);
+			}
+			//$op="";          
 			
 			//Se "Cacha el valor de la operacion"
 			//Ojo si se manda la operacion a traves de un formulario y a la vez por url, tiene prioridad la del formulario.
-			if(isset($_GET["op"]))
+			/*if(isset($_GET["op"]))
 				$op=$_GET["op"];
 			if(isset($_POST["op"]))
-				$op=$_POST["op"];
+				$op=$_POST["op"];*/
 			
 			//Si hay usuarios, se debe iniciar sesion.
-			session_start();
+			
 			
 			//Operaciones en las que no estas dentro del sistema, pero no se quiere mostrar la forma de Iniciar Sesion.
-			if($op == "regForm" || $op == "regConf" || $op == "auth" || $op == "lgOut" || $op == "cod")
+			/*if($op == "regForm" || $op == "regConf" || $op == "auth" || $op == "lgOut" || $op == "cod")
 			{
 				//Aqui se manda la operacion al adm. En realidad solo es para los casos que se encuentran en el if.
 				$objAdm->doGet($op);
 			}
 			else
-			{
+			{*/
 				//Aqui se verifica si existe una sesion.
 				if(isset($_SESSION["user"]))
 				{
@@ -80,16 +92,22 @@ ob_start();
 					$objAdm->navBar(); 
 					//Aqui se mandan las operaciones al adm.
 					//El funcionamiento del sistema se encuentra aqui.
-					$objAdm->doGet($op); 
+					//$objAdm->doGet($op); 
+					?><div id="todo"><?php $objAdm->doGet(""); ?></div><?php
 				}
 				else
 				{
-					//Si no hay una sesion existente, lo unico que se muestra es la forma de inicio de sesion.
-					$objAdm->logInForm();
+					if(!isset($op))
+					{
+						//Si no hay una sesion existente, lo unico que se muestra es la forma de inicio de sesion.
+						$objAdm->logInForm();
+					}
 				}
-			}	
+			//}	
 		?>
+	
 	</div>
+	
 	
 	<!-- Hace posible el funcionamiento de JavaScript -->
 	<!-- jQuery -->
@@ -104,6 +122,21 @@ ob_start();
         interval: 5000 //changes the speed
     })
     </script>
+
+    <script>
+    	function modify_qty(val) {
+    		var qty = document.getElementById('qty').value;
+    		var new_qty = parseInt(qty,10) + val;
+    
+		    if (new_qty < 0) {
+		        new_qty = 0;
+		    }
+		    
+		    document.getElementById('qty').value = new_qty;
+		    return new_qty;
+		}
+    </script>
+
 </body>
 </html>
 <?php
