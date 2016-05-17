@@ -1723,7 +1723,7 @@
 				        Puedes ver tu carrito en la pesta&ntilde;a Ver/Carrito.
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 				        <button type="button" class="btn btn-success" data-dismiss="modal"onclick="request('vCar','todo')">Ver Carrito</button>
 				      </div>
 				    </div>
