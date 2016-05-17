@@ -37,8 +37,8 @@ ob_start();
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="js/scripts.js"></script>
     
-	<div class="brand">ServiQ</div>
-    <div class="address-bar">UABC SAUZAL</div>
+	<div class="brand">Rafael</div>
+    <div class="address-bar">Mexico</div>
 	
 	<!-- Seccion principal? :O -->
 	<div class="container">		

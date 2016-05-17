@@ -29,6 +29,7 @@
 		 public function inicio()
 		 {
 			 $this->verCDia();
+			 echo "hola";
 		 }
 		 
 		 /**
