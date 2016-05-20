@@ -471,7 +471,7 @@
 			}
 			$pedidos = array_reverse($pedidos);
 			$favoritos= $this->myDao->consultaTabla("id_pe", "favoritos","id_cl=$id_cl");
-			$pedidosConLikes = $this->myDao->consultaTabla("id_pl","likes","id_cl = $id_cl");
+			$pedidosConLikes = $this->myDao->consultaTabla("id_pl, id_cd","likes","id_cl = $id_cl");
 			$this->myGui->verPCliente($favoritos,$pedidos,$nombres, $pedidosConLikes);
 		}
 		
