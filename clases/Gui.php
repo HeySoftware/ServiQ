@@ -1186,11 +1186,16 @@
 					}
 					else if ($pedidos[$i]["status"] == "ENTREGADO") 
 					{
-						$id = $pedidos[$i]["id_pl"];
+						$id_pl = $pedidos[$i]["id_pl"];
+						$id_cd = $pedidos[$i]["id_cd"];
 
-						if ( $this->checarLikes($likes, $id) ) 
+						if ( $this->checarLikes($likes, $id_pl) ) 
 						{
-							echo "<td></td></tr>";
+							echo "<td></td></tr>"; 
+						}
+						elseif ( $this->checarLikes($likes, $id_cd) ) 
+						{
+						 	echo "<td></td></tr>";
 						} 
 						else 	
 						{
