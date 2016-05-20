@@ -1186,21 +1186,42 @@
 					}
 					else if ($pedidos[$i]["status"] == "ENTREGADO") 
 					{
-						$id = $pedidos[$i]["id_pl"];
+						$id_pl = $pedidos[$i]["id_pl"];
+						$id_cd = $pedidos[$i]["id_cd"];
 
-						if ( $this->checarLikes($likes, $id) ) 
+						if ($id_cd != NULL)
 						{
-							echo "<td></td></tr>";
-						} 
-						else 	
+							if ( $this->checarLikes($likes, $id_cd) ) 
+							{
+						 		echo "<td></td></tr>";
+							}
+							else
+							{
+								?>
+									<form action="index.php?op=addLike" method="POST">
+										<?
+										echo "<td><button type=\"submit\" name=\"like\" value=\"$id_pe\"class=\"btn btn-success center-block\"><span class=\"glyphicon glyphicon-thumbs-up\"></span></button></td></tr>";
+										?>
+									</form>
+								<?
+							}
+						}
+						else
 						{
-							?>
-								<form action="index.php?op=addLike" method="POST">
-									<?
-									echo "<td><button type=\"submit\" name=\"like\" value=\"$id_pe\"class=\"btn btn-success center-block\"><span class=\"glyphicon glyphicon-thumbs-up\"></span></button></td></tr>";
-									?>
-								</form>
-							<?
+							if ( $this->checarLikes($likes, $id_pl) ) 
+							{
+								echo "<td></td></tr>"; 
+							}
+							else
+							{
+								?>
+									<form action="index.php?op=addLike" method="POST">
+										<?
+										echo "<td><button type=\"submit\" name=\"like\" value=\"$id_pe\"class=\"btn btn-success center-block\"><span class=\"glyphicon glyphicon-thumbs-up\"></span></button></td></tr>";
+										?>
+									</form>
+								<?
+							}
 						}
 					}
 					else

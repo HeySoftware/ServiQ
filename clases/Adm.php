@@ -471,7 +471,7 @@
 			}
 			$pedidos = array_reverse($pedidos);
 			$favoritos= $this->myDao->consultaTabla("id_pe", "favoritos","id_cl=$id_cl");
-			$pedidosConLikes = $this->myDao->consultaTabla("id_pl","likes","id_cl = $id_cl");
+			$pedidosConLikes = $this->myDao->consultaTabla("id_pl, id_cd","likes","id_cl = $id_cl");
 			$this->myGui->verPCliente($favoritos,$pedidos,$nombres, $pedidosConLikes);
 		}
 		
@@ -1437,18 +1437,20 @@
 			$id_pe = $_POST["like"];
 			$condicion = "id_pe=".$id_pe;
 			//Se consulta la informacion del usuario desde su pedido.
-			$informacionUsuario = $this->myDao->consultaTabla("id_cl, id_pl", "pedido", $condicion);
+			$informacionUsuario = $this->myDao->consultaTabla("id_cl, id_pl, id_cd", "pedido", $condicion);
 			$idCliente = $informacionUsuario[0]["id_cl"];
 			$idPlatillo = $informacionUsuario[0]["id_pl"];
-			//Se insertan los datos necesarios para agregar el like a la tabla.
-			$this->myDao->insertarEnTabla("likes", "id_cl, id_pl", $idCliente.", ".$idPlatillo);
-			?>
-			<script type="text/javascript">
-				alert("Se ha agreado el like");
-				window.location.href="index.php?vPCliente"; 
-			</script>
-			<?
-			//header("Location: index.php?op=vPCliente");
+			$idComidaDia = $informacionUsuario[0]["id_cd"];
+
+			if (($idComidaDia != NULL)) 
+			{
+				//Se insertan los valores necesarios para los likes.
+				echo $this->myDao->insertarEnTabla("likes", "id_cl, id_cd", $idCliente.", ".$idComidaDia);
+			}
+			else
+			{
+				echo $this->myDao->insertarEnTabla("likes", "id_cl, id_pl", $idCliente.", ".$idPlatillo);
+			}
 
 		}
 		/**
